@@ -33,7 +33,8 @@ export default function Services() {
                     alt={`${pkg.name} flower`} 
                     fill
                     className="object-cover"
-                    sizes="96px"
+                    sizes="288px"
+                    quality={100}
                   />
                 )}
               </div>

@@ -40,7 +40,7 @@ export const siteData: SiteData = {
         "Guest Book"
       ],
       color: "bg-base-100",
-      image: "https://images.unsplash.com/photo-1559563362-c667ba5f5480?q=80&w=400&auto=format&fit=crop" // Verified Pink/Peach Rose
+      image: "/analysis/RosaPeace_v2.png",
     },
     {
       name: "RED ROSE PLAN",
@@ -56,7 +56,7 @@ export const siteData: SiteData = {
       ],
       color: "bg-primary text-white",
       featured: true,
-      image: "https://images.unsplash.com/photo-1596073419667-9d77d59f033f?q=80&w=400&auto=format&fit=crop" // Verified Red Rose
+      image: "/analysis/RedRose_v2.png",
     },
     {
       name: "WHITE ROSE PLAN",
@@ -71,7 +71,7 @@ export const siteData: SiteData = {
         "Registry & Tarpaulin"
       ],
       color: "bg-base-100",
-      image: "https://images.unsplash.com/photo-1572454591674-2739f30d8c40?q=80&w=400&auto=format&fit=crop" // Macro White Rose
+      image: "/analysis/Whiteflower_v2.png",
     }
   ],
   programs: [
