@@ -62,7 +62,7 @@ export default function Navbar() {
             <li><Link href="#values" onClick={() => setIsState(false)} className="hover:text-accent relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bottom-[-4px] after:left-0 after:bg-accent after:transition-all hover:after:w-full">Values</Link></li>
             <li><Link href="#packages" onClick={() => setIsState(false)} className="hover:text-accent relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bottom-[-4px] after:left-0 after:bg-accent after:transition-all hover:after:w-full">Packages</Link></li>
             <li><Link href="#location" onClick={() => setIsState(false)} className="hover:text-accent relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bottom-[-4px] after:left-0 after:bg-accent after:transition-all hover:after:w-full">Location</Link></li>
-            <li><Link href="#contact" onClick={() => setIsState(false)} className="btn bg-white text-primary border-none hover:bg-accent hover:text-white px-8 rounded-full normal-case">Contact Us</Link></li>
+            <li><Link href="/login" onClick={() => setIsState(false)} className="btn bg-white text-primary border-none hover:bg-accent hover:text-white px-8 rounded-full normal-case">Log In</Link></li>
           </ul>
         </nav>
       </div>
