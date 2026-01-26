@@ -103,7 +103,7 @@ export default function AdminDashboard() {
         
         <div className="divide-y divide-base-200">
           {inquiries.slice(0, 5).map((inquiry) => (
-            <div key={inquiry.id} className="p-4 hover:bg-base-100 transition-colors flex items-center justify-between group">
+            <Link key={inquiry.id} href={`/admin/inquiries/${inquiry.id}`} className="block p-4 hover:bg-base-100 transition-colors flex items-center justify-between group">
               <div className="flex items-center gap-4">
                 <div className={`w-2 h-2 rounded-full ${inquiry.status === 'NEW' ? 'bg-red-500' : 'bg-gray-300'}`}></div>
                 <div>
@@ -114,7 +114,7 @@ export default function AdminDashboard() {
               <span className="text-xs text-base-content/40 font-mono">
                 {new Date(inquiry.createdAt).toLocaleDateString()}
               </span>
-            </div>
+            </Link>
           ))}
           {inquiries.length === 0 && (
             <div className="p-8 text-center text-base-content/40">No activity yet.</div>

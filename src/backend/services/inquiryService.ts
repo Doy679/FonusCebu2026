@@ -31,5 +31,19 @@ export const inquiryService = {
       return true;
     }
     return false;
+  },
+
+  getById: async (id: string): Promise<Inquiry | undefined> => {
+    await new Promise((resolve) => setTimeout(resolve, 200));
+    return inquiries.find(i => i.id === id);
+  },
+
+  update: async (id: string, updates: Partial<Inquiry>): Promise<Inquiry | null> => {
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    const index = inquiries.findIndex(i => i.id === id);
+    if (index === -1) return null;
+    
+    inquiries[index] = { ...inquiries[index], ...updates };
+    return inquiries[index];
   }
 };

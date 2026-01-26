@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { Inquiry } from '@/backend/types';
 import { Mail, Search } from 'lucide-react';
 
+import Link from 'next/link';
+
 export default function InquiriesPage() {
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -67,47 +69,49 @@ export default function InquiriesPage() {
           ) : (
             filteredInquiries.map((inquiry) => (
               <div key={inquiry.id} className="bg-white p-6 rounded-box shadow-sm border border-base-200 hover:shadow-md transition-all relative overflow-hidden group">
-                {inquiry.status === 'NEW' && (
-                  <div className="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full m-3" title="New Message"></div>
-                )}
-                
-                <div className="flex flex-col md:flex-row gap-6">
-                  <div className="flex-shrink-0 flex flex-col gap-2 min-w-[220px]">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
-                        {inquiry.name.charAt(0)}
-                      </div>
-                      <div>
-                        <h3 className="font-bold text-base text-base-content">{inquiry.name}</h3>
-                        <p className="text-xs text-base-content/60">{new Date(inquiry.createdAt).toLocaleDateString()}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm text-base-content/70 mt-2 bg-base-100 p-2 rounded-lg">
-                      <Mail size={14} /> 
-                      <span className="truncate max-w-[180px]">{inquiry.email}</span>
-                    </div>
-                  </div>
+                <Link href={`/admin/inquiries/${inquiry.id}`} className="block">
+                  {inquiry.status === 'NEW' && (
+                    <div className="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full m-3" title="New Message"></div>
+                  )}
                   
-                  <div className="flex-grow border-l border-base-200 md:pl-6 pt-4 md:pt-0">
-                    <div className="flex items-center justify-between mb-2">
-                       <h4 className="font-bold text-lg text-primary">{inquiry.subject}</h4>
-                       <span className={`badge ${inquiry.status === 'NEW' ? 'badge-primary' : 'badge-ghost'} badge-sm uppercase font-bold tracking-wide`}>
-                         {inquiry.status}
-                       </span>
+                  <div className="flex flex-col md:flex-row gap-6">
+                    <div className="flex-shrink-0 flex flex-col gap-2 min-w-[220px]">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
+                          {inquiry.name.charAt(0)}
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-base text-base-content">{inquiry.name}</h3>
+                          <p className="text-xs text-base-content/60">{new Date(inquiry.createdAt).toLocaleDateString()}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-base-content/70 mt-2 bg-base-100 p-2 rounded-lg">
+                        <Mail size={14} /> 
+                        <span className="truncate max-w-[180px]">{inquiry.email}</span>
+                      </div>
                     </div>
-                    <p className="text-base-content/80 text-sm whitespace-pre-wrap leading-relaxed">
-                      {inquiry.message}
-                    </p>
+                    
+                    <div className="flex-grow border-l border-base-200 md:pl-6 pt-4 md:pt-0">
+                      <div className="flex items-center justify-between mb-2">
+                        <h4 className="font-bold text-lg text-primary">{inquiry.subject}</h4>
+                        <span className={`badge ${inquiry.status === 'NEW' ? 'badge-primary' : 'badge-ghost'} badge-sm uppercase font-bold tracking-wide`}>
+                          {inquiry.status}
+                        </span>
+                      </div>
+                      <p className="text-base-content/80 text-sm whitespace-pre-wrap leading-relaxed line-clamp-2">
+                        {inquiry.message}
+                      </p>
+                    </div>
                   </div>
+                </Link>
 
-                  <div className="flex flex-row md:flex-col justify-center gap-2 mt-4 md:mt-0 pt-4 md:pt-0 border-t md:border-t-0 md:border-l border-base-200 md:pl-6 min-w-[120px]">
-                    <button className="btn btn-sm btn-primary w-full md:w-auto">
-                      Reply
-                    </button>
-                    <button className="btn btn-sm btn-ghost w-full md:w-auto text-base-content/60">
-                       Archive
-                    </button>
-                  </div>
+                <div className="flex flex-row md:flex-col justify-center gap-2 mt-4 md:mt-0 pt-4 md:pt-0 md:absolute md:right-6 md:top-6 min-w-[120px] pointer-events-none">
+                  <Link 
+                    href={`/admin/inquiries/${inquiry.id}`}
+                    className="btn btn-sm btn-primary w-full md:w-auto pointer-events-auto"
+                  >
+                    View / Reply
+                  </Link>
                 </div>
               </div>
             ))
