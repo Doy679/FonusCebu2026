@@ -45,18 +45,18 @@ export default function Navbar() {
           </div>
         </Link>
         
-        <div className="hamburger md:hidden text-3xl cursor-pointer text-white" onClick={toggleMenu}>
+        <div className="hamburger md:hidden text-3xl cursor-pointer text-white relative z-[1001]" onClick={toggleMenu}>
           {isOpen ? <X /> : <Menu />}
         </div>
         
         <nav className={`
-          fixed md:relative top-20 md:top-0 left-0 w-full md:w-auto 
+          fixed md:relative top-0 md:top-0 left-0 w-full md:w-auto h-screen md:h-auto
           bg-primary md:bg-transparent flex flex-col md:flex-row 
-          items-center gap-8 md:gap-8 p-8 md:p-0
+          items-center justify-center md:justify-end gap-8 md:gap-8 p-8 md:p-0
           transition-all duration-500 ease-in-out z-[999]
           ${isOpen ? 'clip-path-circle-open' : 'clip-path-circle-closed md:clip-path-none'}
         `}>
-          <ul className="flex flex-col md:flex-row items-center gap-8 text-sm font-medium text-white/90 uppercase tracking-widest">
+          <ul className="flex flex-col md:flex-row items-center gap-8 text-xl md:text-sm font-medium text-white/90 uppercase tracking-widest">
             <li><Link href="#home" onClick={() => setIsState(false)} className="hover:text-accent relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bottom-[-4px] after:left-0 after:bg-accent after:transition-all hover:after:w-full">Home</Link></li>
             <li><Link href="#about" onClick={() => setIsState(false)} className="hover:text-accent relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bottom-[-4px] after:left-0 after:bg-accent after:transition-all hover:after:w-full">About</Link></li>
             <li><Link href="#values" onClick={() => setIsState(false)} className="hover:text-accent relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bottom-[-4px] after:left-0 after:bg-accent after:transition-all hover:after:w-full">Values</Link></li>

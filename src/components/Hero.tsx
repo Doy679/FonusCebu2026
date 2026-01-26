@@ -31,7 +31,7 @@ export default function Hero() {
           {siteData.hero.badge}
         </span>
         
-        <h1 className="hero-title text-5xl md:text-8xl font-serif font-bold mb-10 leading-[1.3] tracking-tight text-white drop-shadow-2xl uppercase">
+        <h1 className="hero-title text-4xl md:text-8xl font-serif font-bold mb-10 leading-[1.3] tracking-tight text-white drop-shadow-2xl uppercase">
           WE VALUE <br />
           <span className="inline-block pb-3 pr-3 -mb-3 text-transparent bg-clip-text bg-gradient-to-r from-accent via-white to-accent italic normal-case leading-normal">
             Human Dignity

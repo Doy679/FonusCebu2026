@@ -9,7 +9,7 @@ export default function Footer() {
     <footer id="contact" className="bg-[#380404] text-[#dcdcdc] py-16">
       <div className="container mx-auto px-4 text-center flex flex-col items-center">
         {/* Full Logo Lockup */}
-        <div className="flex items-center gap-4 mb-6">
+        <div className="flex flex-col sm:flex-row items-center gap-4 mb-6">
           <div className="bg-white p-0.5 rounded-full relative h-16 w-16 overflow-hidden border border-white/20">
             <Image 
               src="/fonus.webp" 
@@ -19,7 +19,7 @@ export default function Footer() {
               sizes="64px"
             />
           </div>
-          <div className="flex flex-col text-left">
+          <div className="flex flex-col text-center sm:text-left">
             <span className="font-serif font-bold text-3xl text-white tracking-wide leading-none">
               {siteData.general.name}
             </span>
