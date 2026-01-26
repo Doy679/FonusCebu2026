@@ -18,18 +18,18 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { name, email, phone, address, plan, subject, message } = body;
 
-    if (!name || !email || !message) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+    if (!name || !phone) {
+      return NextResponse.json({ error: 'Name and Phone Number are required' }, { status: 400 });
     }
 
     const newInquiry = await inquiryService.create({ 
       name, 
-      email, 
+      email: email || '', 
       phone, 
-      address, 
-      plan, 
-      subject, 
-      message 
+      address: address || '', 
+      plan: plan || 'General', 
+      subject: subject || 'General Inquiry', 
+      message: message || '' 
     });
     return NextResponse.json(newInquiry, { status: 201 });
   } catch (error) {

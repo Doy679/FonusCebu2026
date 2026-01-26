@@ -48,8 +48,12 @@ export default function AdminLayout({
         flex flex-col
       `}>
         {/* Sidebar Header */}
-        <div className="p-4 border-b border-white/10">
-          <div className="flex items-center justify-between w-full gap-2">
+        <Link 
+          href="/" 
+          className="p-4 border-b border-white/10 block hover:bg-white/5 transition-colors group"
+          title="Back to Landing Page"
+        >
+          <div className="flex items-center justify-between w-full gap-2 transition-transform group-hover:scale-[0.98]">
             {/* Left Logo */}
             <div className="bg-white p-0.5 rounded-full relative h-9 w-9 shrink-0 overflow-hidden border border-white/20 shadow-sm">
               <Image 
@@ -80,7 +84,7 @@ export default function AdminLayout({
               />
             </div>
           </div>
-        </div>
+        </Link>
 
         {/* Navigation */}
         <nav className="flex-1 py-6 px-4 space-y-2 overflow-y-auto">

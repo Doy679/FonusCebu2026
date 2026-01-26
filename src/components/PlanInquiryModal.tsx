@@ -16,7 +16,7 @@ export default function PlanInquiryModal({ isOpen, onClose, planName }: PlanInqu
     address: '',
     email: '',
     message: '',
-    bot_trap: '' // Honeypot field
+    bot_trap: '' 
   });
   const [status, setStatus] = useState<'IDLE' | 'LOADING' | 'SUCCESS' | 'ERROR'>('IDLE');
   const [errorMsg, setErrorMsg] = useState('');
@@ -35,7 +35,6 @@ export default function PlanInquiryModal({ isOpen, onClose, planName }: PlanInqu
   };
 
   const validatePhone = (phone: string) => {
-    // Basic PH Phone validation: 09XXXXXXXXX or +639XXXXXXXXX
     const regex = /^(09|\+639)\d{9}$/;
     return regex.test(phone.replace(/\s/g, ''));
   };
@@ -44,10 +43,8 @@ export default function PlanInquiryModal({ isOpen, onClose, planName }: PlanInqu
     e.preventDefault();
     setErrorMsg('');
 
-    // Check Trap Variable (Honeypot)
     if (formData.bot_trap) {
-      console.log("Bot detected");
-      setStatus('SUCCESS'); // Pretend it worked
+      setStatus('SUCCESS'); 
       return;
     }
 
@@ -78,10 +75,12 @@ export default function PlanInquiryModal({ isOpen, onClose, planName }: PlanInqu
           setFormData({ name: '', phone: '', address: '', email: '', message: '', bot_trap: '' });
         }, 2000);
       } else {
+        const data = await res.json();
+        setErrorMsg(data.error || 'Failed to submit. Please try again.');
         setStatus('ERROR');
       }
     } catch (error) {
-      console.error(error);
+      setErrorMsg('A connection error occurred.');
       setStatus('ERROR');
     }
   };
@@ -89,38 +88,47 @@ export default function PlanInquiryModal({ isOpen, onClose, planName }: PlanInqu
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[10000] flex items-center justify-center px-4 py-6">
+    <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4">
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onClick={onClose}></div>
+      <div 
+        className="absolute inset-0 bg-black/70 backdrop-blur-md transition-opacity animate-in fade-in duration-300" 
+        onClick={onClose}
+      ></div>
 
       {/* Modal Content */}
-      <div className="bg-white w-full max-w-lg rounded-3xl shadow-2xl relative z-10 flex flex-col max-h-[90vh] overflow-hidden animate-fade-in">
+      <div className="bg-white w-full max-w-lg rounded-2xl shadow-2xl relative z-10 flex flex-col max-h-[95vh] overflow-hidden animate-in zoom-in-95 duration-300">
         
-        {/* Fixed Header */}
-        <div className="bg-primary px-6 py-5 flex items-center justify-between text-white shrink-0">
-          <div>
-            <h3 className="font-serif font-bold text-xl tracking-wide">Application Form</h3>
-            <p className="text-[10px] text-accent font-bold uppercase tracking-widest">{planName} Plan</p>
+        {/* Compact Header */}
+        <div className="bg-primary px-5 py-3 flex items-center justify-between text-white shrink-0">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
+            <h3 className="font-serif font-bold text-lg tracking-wide text-white">Get {planName}</h3>
           </div>
-          <button onClick={onClose} className="hover:bg-white/20 p-2 rounded-full transition-colors">
-            <X size={24} />
+          <button 
+            onClick={onClose} 
+            className="hover:bg-white/20 p-1.5 rounded-full transition-colors"
+          >
+            <X size={20} />
           </button>
         </div>
 
-        {/* Scrollable Body */}
-        <div className="p-6 md:p-8 overflow-y-auto custom-scrollbar">
+        {/* Body */}
+        <div className="p-5 overflow-y-auto custom-scrollbar bg-base-100 flex-1">
           {status === 'SUCCESS' ? (
-            <div className="flex flex-col items-center justify-center py-12 text-center space-y-4">
-              <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-2">
-                <CheckCircle size={40} />
+            <div className="flex flex-col items-center justify-center h-full text-center space-y-4 min-h-[300px]">
+              <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center">
+                <CheckCircle size={32} />
               </div>
-              <h4 className="text-2xl font-serif font-bold text-primary">Request Sent!</h4>
-              <p className="text-base-content/70">Our team will contact you shortly regarding your {planName} plan application.</p>
+              <div>
+                <h4 className="text-xl font-bold text-primary mb-1">Message Sent!</h4>
+                <p className="text-sm text-base-content/70">
+                  We will contact you shortly about the<br/><strong>{planName} Plan</strong>.
+                </p>
+              </div>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-5">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-3 h-full">
               
-              {/* Trap Variable (Hidden from humans) */}
               <input 
                 type="text" 
                 name="bot_trap" 
@@ -131,70 +139,65 @@ export default function PlanInquiryModal({ isOpen, onClose, planName }: PlanInqu
               />
 
               <div className="form-control">
-                <label className="label pt-0"><span className="label-text font-bold text-primary/60 text-xs uppercase">Full Name</span></label>
+                <label className="label py-0 pb-1"><span className="label-text font-bold text-primary/70 text-[10px] uppercase tracking-wider">Full Name</span></label>
                 <input 
                   type="text" 
                   name="name" 
-                  placeholder="e.g. Juan Dela Cruz"
                   value={formData.name}
                   onChange={handleChange}
-                  className="input input-bordered w-full bg-base-100 focus:border-primary focus:outline-none rounded-xl h-12" 
+                  className="input input-bordered w-full bg-white focus:border-primary focus:outline-none rounded-xl h-10 text-sm" 
                   required 
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3">
                 <div className="form-control">
-                  <label className="label pt-0"><span className="label-text font-bold text-primary/60 text-xs uppercase">Phone Number</span></label>
+                  <label className="label py-0 pb-1"><span className="label-text font-bold text-primary/70 text-[10px] uppercase tracking-wider">Phone</span></label>
                   <input 
                     type="tel" 
                     name="phone" 
-                    placeholder="09XXXXXXXXX"
                     value={formData.phone}
                     onChange={handleChange}
-                    className={`input input-bordered w-full bg-base-100 focus:border-primary focus:outline-none rounded-xl h-12 ${errorMsg ? 'border-error' : ''}`} 
+                    className={`input input-bordered w-full bg-white focus:border-primary focus:outline-none rounded-xl h-10 text-sm ${errorMsg.includes('phone') ? 'border-error' : ''}`} 
                     required 
                   />
                 </div>
                 <div className="form-control">
-                  <label className="label pt-0"><span className="label-text font-bold text-primary/60 text-xs uppercase">Email (Optional)</span></label>
+                  <label className="label py-0 pb-1"><span className="label-text font-bold text-primary/70 text-[10px] uppercase tracking-wider">Email (Optional)</span></label>
                   <input 
                     type="email" 
                     name="email" 
-                    placeholder="name@example.com"
                     value={formData.email}
                     onChange={handleChange}
-                    className="input input-bordered w-full bg-base-100 focus:border-primary focus:outline-none rounded-xl h-12" 
+                    className="input input-bordered w-full bg-white focus:border-primary focus:outline-none rounded-xl h-10 text-sm" 
                   />
                 </div>
               </div>
 
               <div className="form-control">
-                <label className="label pt-0"><span className="label-text font-bold text-primary/60 text-xs uppercase">Full Address</span></label>
+                <label className="label py-0 pb-1"><span className="label-text font-bold text-primary/70 text-[10px] uppercase tracking-wider">Complete Address</span></label>
                 <input 
                   type="text" 
                   name="address" 
-                  placeholder="Street, Barangay, City, Province"
                   value={formData.address}
                   onChange={handleChange}
-                  className="input input-bordered w-full bg-base-100 focus:border-primary focus:outline-none rounded-xl h-12" 
+                  className="input input-bordered w-full bg-white focus:border-primary focus:outline-none rounded-xl h-10 text-sm" 
                   required 
                 />
               </div>
 
-              <div className="form-control">
-                <label className="label pt-0"><span className="label-text font-bold text-primary/60 text-xs uppercase">Additional Message</span></label>
+              <div className="form-control flex-1 min-h-[60px]">
+                <label className="label py-0 pb-1"><span className="label-text font-bold text-primary/70 text-[10px] uppercase tracking-wider">Notes (Optional)</span></label>
                 <textarea 
                   name="message" 
-                  placeholder="Tell us more about your needs..."
                   value={formData.message}
                   onChange={handleChange}
-                  className="textarea textarea-bordered h-24 bg-base-100 focus:border-primary focus:outline-none rounded-xl resize-none" 
+                  className="textarea textarea-bordered w-full bg-white focus:border-primary focus:outline-none rounded-xl resize-none p-3 text-sm h-full min-h-[60px]" 
                 ></textarea>
               </div>
 
               {errorMsg && (
-                <div className="flex items-center gap-2 text-error text-xs font-bold bg-error/10 p-3 rounded-lg border border-error/20">
+                <div className="flex items-center gap-2 text-error text-xs font-bold bg-error/5 p-2 rounded-lg border border-error/20">
                   <AlertCircle size={14} /> {errorMsg}
                 </div>
               )}
@@ -202,9 +205,13 @@ export default function PlanInquiryModal({ isOpen, onClose, planName }: PlanInqu
               <button 
                 type="submit" 
                 disabled={status === 'LOADING'}
-                className="btn btn-primary w-full rounded-xl h-14 shadow-lg hover:shadow-primary/30 transition-all font-bold uppercase tracking-widest"
+                className="btn btn-primary w-full rounded-xl h-11 min-h-[2.75rem] shadow-md transition-all font-bold uppercase tracking-widest text-sm mt-1"
               >
-                {status === 'LOADING' ? <><Loader2 className="animate-spin" size={20} /> Processing...</> : <><Send size={20} /> Submit Inquiry</>}
+                {status === 'LOADING' ? (
+                  <><Loader2 className="animate-spin" size={16} /> sending...</>
+                ) : (
+                  <>Submit Application <Send size={16} /></>
+                )}
               </button>
             </form>
           )}
@@ -212,15 +219,14 @@ export default function PlanInquiryModal({ isOpen, onClose, planName }: PlanInqu
       </div>
       <style jsx>{`
         .custom-scrollbar::-webkit-scrollbar {
-          width: 6px;
+          width: 4px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
-          background: #f1f1f1;
-          border-radius: 10px;
+          background: transparent;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: oklch(28% 0.08 20);
-          border-radius: 10px;
+          background: #ccc;
+          border-radius: 4px;
         }
       `}</style>
     </div>
