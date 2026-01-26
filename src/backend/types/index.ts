@@ -9,6 +9,9 @@ export interface Inquiry {
   id: string;
   name: string;
   email: string;
+  phone?: string;
+  address?: string;
+  plan?: string;
   subject: string;
   message: string;
   createdAt: string;

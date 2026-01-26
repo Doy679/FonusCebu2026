@@ -16,13 +16,21 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, email, subject, message } = body;
+    const { name, email, phone, address, plan, subject, message } = body;
 
     if (!name || !email || !message) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    const newInquiry = await inquiryService.create({ name, email, subject, message });
+    const newInquiry = await inquiryService.create({ 
+      name, 
+      email, 
+      phone, 
+      address, 
+      plan, 
+      subject, 
+      message 
+    });
     return NextResponse.json(newInquiry, { status: 201 });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to submit inquiry' }, { status: 500 });

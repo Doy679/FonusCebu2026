@@ -1,43 +1,20 @@
 "use client";
 
-import { useState } from 'react';
+import { useActionState } from 'react';
 import Link from 'next/link';
 import { Mail, Lock, ArrowRight, Loader2 } from 'lucide-react';
+import { login } from './actions';
+
+// Initial state for the form
+const initialState = {
+  error: '',
+};
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    
-    try {
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        // Redirect to Admin Dashboard
-        window.location.href = '/admin/dashboard';
-      } else {
-        alert(data.error || 'Login failed');
-      }
-    } catch (error) {
-      console.error('Login error:', error);
-      alert('An unexpected error occurred');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const [state, formAction, isPending] = useActionState(login, initialState);
 
   return (
-    <div className="min-h-screen pt-20 flex items-center justify-center bg-base-200 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-base-200 px-4">
       <div className="w-full max-w-md animate-fade-in">
         <div className="bg-white rounded-[var(--radius-box)] shadow-xl overflow-hidden">
           {/* Header */}
@@ -49,7 +26,7 @@ export default function LoginPage() {
 
           {/* Form */}
           <div className="p-8">
-            <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+            <form action={formAction} className="flex flex-col gap-6">
               
               <div className="form-control">
                 <label className="label">
@@ -61,10 +38,9 @@ export default function LoginPage() {
                   </div>
                   <input 
                     type="email" 
+                    name="email"
                     placeholder="you@example.com" 
                     className="input input-bordered w-full pl-10 bg-base-100 focus:border-primary focus:outline-none transition-all" 
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
                     required
                   />
                 </div>
@@ -81,21 +57,26 @@ export default function LoginPage() {
                   </div>
                   <input 
                     type="password" 
+                    name="password"
                     placeholder="••••••••" 
                     className="input input-bordered w-full pl-10 bg-base-100 focus:border-primary focus:outline-none transition-all" 
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
                     required
                   />
                 </div>
               </div>
 
+              {state?.error && (
+                <div className="text-red-500 text-sm text-center font-medium bg-red-50 p-2 rounded">
+                  {state.error}
+                </div>
+              )}
+
               <button 
                 type="submit" 
                 className="btn btn-primary w-full shadow-lg hover:shadow-primary/30 transition-all duration-300"
-                disabled={isLoading}
+                disabled={isPending}
               >
-                {isLoading ? (
+                {isPending ? (
                   <>
                     <Loader2 className="animate-spin mr-2" size={18} />
                     Signing in...

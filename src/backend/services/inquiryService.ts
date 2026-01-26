@@ -1,25 +1,36 @@
 import { Inquiry } from '../types';
 
 // In-memory storage (This will be replaced by a real Database later)
-// Note: This resets when the server restarts. To make it persistent without a DB, we'd need to write to a JSON file.
 const inquiries: Inquiry[] = [
   {
     id: '1',
-    name: 'John Doe',
-    email: 'john@example.com',
-    subject: 'Plan Inquiry',
-    message: 'I am interested in the Red Rose Plan. Can you send more details?',
-    createdAt: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
+    name: 'Maria Santos',
+    email: 'maria.santos@gmail.com',
+    phone: '09171234567',
+    address: 'Talisay City, Cebu',
+    plan: 'Rosa Peace',
+    subject: 'Rosa Peace Plan Inquiry',
+    message: 'Good morning, I would like to ask if the Rosa Peace Plan is available for installments? Also, do you have a branch near Talisay City?',
+    createdAt: new Date(Date.now() - 3600000 * 2).toISOString(), // 2 hours ago
     status: 'NEW'
   },
   {
     id: '2',
-    name: 'Jane Smith',
-    email: 'jane@example.com',
-    subject: 'Service Question',
-    message: 'Do you offer transport services outside Cebu City?',
-    createdAt: new Date(Date.now() - 172800000).toISOString(), // 2 days ago
+    name: 'Juan Dela Cruz',
+    email: 'juandelacruz@yahoo.com',
+    subject: 'Membership Requirements',
+    message: 'Hi, I want to become a member of the cooperative. What are the requirements and how much is the initial fee?',
+    createdAt: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
     status: 'READ'
+  },
+  {
+    id: '3',
+    name: 'Sarah Lim',
+    email: 'slim@company.ph',
+    subject: 'Corporate Partnership',
+    message: 'We are looking for a funeral service provider for our employees. Do you offer corporate packages?',
+    createdAt: new Date(Date.now() - 172800000).toISOString(), // 2 days ago
+    status: 'ARCHIVED'
   }
 ];
 

@@ -1,8 +1,14 @@
+"use client";
+
 import { siteData } from '@/data/siteData';
 import { CheckCircle } from 'lucide-react';
 import Image from 'next/image';
+import { useState } from 'react';
+import PlanInquiryModal from './PlanInquiryModal';
 
 export default function Services() {
+  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
+
   return (
     <section className="pricing py-24 bg-white relative z-10" id="packages">
       <div className="container mx-auto px-4">
@@ -64,8 +70,8 @@ export default function Services() {
                 ))}
               </ul>
               <div className="mt-auto">
-                <a 
-                  href="#contact" 
+                <button 
+                  onClick={() => setSelectedPlan(pkg.name)}
                   className={`btn w-full rounded-full py-3 h-auto min-h-0 border-none transition-transform hover:-translate-y-1 text-sm ${
                     pkg.featured 
                       ? 'bg-accent text-primary hover:bg-[#5E0B0B] hover:text-white' 
@@ -73,12 +79,18 @@ export default function Services() {
                   }`}
                 >
                   {pkg.featured ? 'Choose Plan' : 'Inquire'}
-                </a>
+                </button>
               </div>
             </div>
           ))}
         </div>
       </div>
+
+      <PlanInquiryModal 
+        isOpen={!!selectedPlan} 
+        onClose={() => setSelectedPlan(null)} 
+        planName={selectedPlan || ''} 
+      />
     </section>
   );
 }

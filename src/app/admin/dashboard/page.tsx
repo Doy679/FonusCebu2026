@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import { Inquiry } from '@/backend/types';
 import { Mail, TrendingUp, Calendar, ArrowRight, LucideIcon } from 'lucide-react';
 import Link from 'next/link';
@@ -36,29 +36,29 @@ export default function AdminDashboard() {
     todayInquiries: 0
   });
 
-  const fetchInquiries = useCallback(async () => {
-    try {
-      const res = await fetch('/api/inquiries');
-      if (res.ok) {
-        const data: Inquiry[] = await res.json();
-        setInquiries(data);
-        
-        // Calculate stats
-        const today = new Date().toISOString().split('T')[0];
-        setStats({
-          totalInquiries: data.length,
-          newInquiries: data.filter(i => i.status === 'NEW').length,
-          todayInquiries: data.filter(i => i.createdAt.startsWith(today)).length
-        });
-      }
-    } catch (error) {
-      console.error('Failed to fetch stats:', error);
-    }
-  }, []);
-
   useEffect(() => {
+    const fetchInquiries = async () => {
+      try {
+        const res = await fetch('/api/inquiries');
+        if (res.ok) {
+          const data: Inquiry[] = await res.json();
+          setInquiries(data);
+          
+          // Calculate stats
+          const today = new Date().toISOString().split('T')[0];
+          setStats({
+            totalInquiries: data.length,
+            newInquiries: data.filter(i => i.status === 'NEW').length,
+            todayInquiries: data.filter(i => i.createdAt.startsWith(today)).length
+          });
+        }
+      } catch (error) {
+        console.error('Failed to fetch stats:', error);
+      }
+    };
+
     fetchInquiries();
-  }, [fetchInquiries]);
+  }, []);
 
   return (
     <div className="max-w-6xl mx-auto animate-fade-in">
