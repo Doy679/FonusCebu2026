@@ -13,12 +13,12 @@ export async function login(prevState: { error?: string } | null, formData: Form
   }
 
   try {
-    const result = await authService.login(email, password);
+    const user = await authService.login(email, password);
 
-    if (result.success && result.token) {
+    if (user) {
       // Set cookie directly on the server
       const cookieStore = await cookies();
-      cookieStore.set('auth_token', result.token, {
+      cookieStore.set('auth_token', user.id, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
