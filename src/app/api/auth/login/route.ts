@@ -10,15 +10,17 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Email and password are required' }, { status: 400 });
     }
 
-    const result = await authService.login(email, password);
+    const user = await authService.login(email, password);
 
-    if (result.success && result.user) {
-      const response = NextResponse.json({ user: result.user, message: 'Login successful' });
+    if (user) {
+      const response = NextResponse.json({ user, message: 'Login successful' });
       
-      // Set a secure HTTP-only cookie for the session
-      response.cookies.set('auth_token', result.token!, {
+      // Set a temporary cookie to indicate the user is logged in
+      // Note: Real Firebase sessions are usually handled via the client-side SDK, 
+      // but we'll keep the cookie logic for your existing middleware/admin checks.
+      response.cookies.set('auth_token', user.id, {
         httpOnly: true,
-        secure: false, // Changed to false to ensure compatibility with all environments (HTTP/HTTPS)
+        secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
         path: '/',
         maxAge: 60 * 60 * 24 // 1 day
@@ -29,6 +31,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
     }
   } catch (error) {
+    console.error('Login API error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
