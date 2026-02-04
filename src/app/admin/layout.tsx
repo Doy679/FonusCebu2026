@@ -10,7 +10,8 @@ import {
   Settings, 
   History, 
   LogOut,
-  Menu
+  Menu,
+  CreditCard
 } from 'lucide-react';
 import { useState } from 'react';
 import { logout } from '@/app/actions/auth';
@@ -27,6 +28,7 @@ export default function AdminLayout({
   const menuItems = [
     { name: 'Dashboard', icon: LayoutDashboard, href: '/admin/dashboard' },
     { name: 'Inquiries', icon: MessageSquare, href: '/admin/inquiries' },
+    { name: 'Membership', icon: CreditCard, href: '/admin/membership' },
     { name: 'Profile', icon: User, href: '/admin/profile' },
     { name: 'Settings', icon: Settings, href: '/admin/settings' },
     { name: 'History', icon: History, href: '/admin/history' },

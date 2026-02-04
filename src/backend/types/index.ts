@@ -17,4 +17,31 @@ export interface Inquiry {
   createdAt: string;
   status: 'NEW' | 'READ' | 'ARCHIVED';
 }
+
+export interface MembershipRecord {
+  year: string;
+  package: string;
+  validity: string;
+  representative: string;
+  remarks: string;
+}
+
+export interface Membership {
+  id: string;
+  // Front of card
+  name: string;
+  presentAddress: string;
+  birthdate: string;
+  gender: string;
+  coopName: string;
+  dateIssued: string;
+  imageUrl?: string; // For the photo placeholder
+  
+  // Back of card
+  emergencyContact: string; // The "In Case of Emergency" box content
+  records: MembershipRecord[]; // The table rows
+  
+  createdAt: string;
+  updatedAt: string;
+}
   
