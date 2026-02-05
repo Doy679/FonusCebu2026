@@ -533,7 +533,7 @@ export default function MembershipCardForm({
                     </div>
 
                     {/* Slogan */}
-                    <div className="slogan font-script">Wa'y Sama Human Dignity</div>
+                    <div className="slogan font-script">We Value Human Dignity</div>
 
                     {/* Title */}
                     <div className="card-name font-serif">MEMBERSHIP CERTIFICATE CARD</div>
