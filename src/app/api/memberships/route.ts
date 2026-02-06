@@ -21,8 +21,8 @@ export async function POST(request: Request) {
     
     const newMembership = await membershipService.create(body);
     return NextResponse.json(newMembership, { status: 201 });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error creating membership:', error);
-    return NextResponse.json({ error: 'Failed to create membership' }, { status: 500 });
+    return NextResponse.json({ error: error.message || 'Failed to create membership' }, { status: 500 });
   }
 }

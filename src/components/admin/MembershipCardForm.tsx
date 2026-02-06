@@ -3,10 +3,12 @@
 import { useState, useRef } from "react";
 import { Membership, MembershipRecord } from "@/backend/types";
 import { Loader2, Save, Download, Upload } from "lucide-react";
+import { db } from "@/lib/firebase";
+import { collection, addDoc, doc, updateDoc, Timestamp } from "firebase/firestore";
 
 interface MembershipCardFormProps {
   initialData?: Membership;
-  onSubmit: (data: Partial<Membership>) => Promise<void>;
+  onSubmit: (data: Partial<Membership>) => Promise<void>; // Kept for prop compatibility, but we might bypass
   onCancel: () => void;
   isSubmitting: boolean;
 }
@@ -28,9 +30,9 @@ const PLACEHOLDER_LOGOS = {
 
 export default function MembershipCardForm({
   initialData,
-  onSubmit,
+  onSubmit: parentOnSubmit, // Rename to avoid confusion
   onCancel,
-  isSubmitting,
+  isSubmitting: parentIsSubmitting,
 }: MembershipCardFormProps) {
   const [formData, setFormData] = useState<Partial<Membership>>({
     name: "",
@@ -51,6 +53,7 @@ export default function MembershipCardForm({
   });
 
   const [userPhoto, setUserPhoto] = useState<string | null>(initialData?.imageUrl || null);
+  const [localIsSubmitting, setLocalIsSubmitting] = useState(false);
 
   const handleChange = (field: keyof Membership, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -77,6 +80,57 @@ export default function MembershipCardForm({
       reader.readAsDataURL(file);
     }
   };
+
+  const handleSave = async () => {
+    // 1. Validation
+    const requiredFields = ['name', 'presentAddress', 'birthdate', 'gender'];
+    const missing = requiredFields.filter(field => !formData[field as keyof Membership]);
+    
+    if (missing.length > 0) {
+      alert(`Please fill in the required fields: ${missing.join(', ')}`);
+      return;
+    }
+
+    setLocalIsSubmitting(true);
+
+    try {
+      // 2. Prepare Data
+      const dataToSave = {
+        ...formData,
+        imageUrl: userPhoto || null,
+        updatedAt: Timestamp.now(),
+        // Add createdAt only for new docs
+        ...(initialData ? {} : { createdAt: Timestamp.now() })
+      };
+
+      // Clean undefined
+      Object.keys(dataToSave).forEach(key => 
+        (dataToSave as any)[key] === undefined && delete (dataToSave as any)[key]
+      );
+
+      // 3. Save to Firestore (Client Side)
+      if (initialData?.id) {
+        // Update
+        const docRef = doc(db, "memberships", initialData.id);
+        await updateDoc(docRef, dataToSave);
+      } else {
+        // Create
+        await addDoc(collection(db, "memberships"), dataToSave);
+      }
+
+      // 4. Notify Parent to close/refresh
+      await parentOnSubmit(dataToSave); 
+      
+      setLocalIsSubmitting(false);
+
+    } catch (error: any) {
+      console.error("Save failed:", error);
+      alert(`Failed to save record: ${error.message}`);
+      setLocalIsSubmitting(false);
+    }
+  };
+
+  const isSubmitting = localIsSubmitting || parentIsSubmitting;
 
   return (
     <div className="flex flex-col items-center gap-8 w-full min-h-screen bg-[#444] p-5 font-sans">
@@ -494,7 +548,7 @@ export default function MembershipCardForm({
              <div className="action-buttons">
                 <button className="btn-cancel" onClick={onCancel} disabled={isSubmitting}>Cancel</button>
                 <button className="btn-print" onClick={() => window.print()}><Download size={18} /> Print</button>
-                <button className="btn-save" onClick={() => onSubmit({...formData, imageUrl: userPhoto || undefined})} disabled={isSubmitting}>
+                <button className="btn-save" onClick={handleSave} disabled={isSubmitting}>
                    {isSubmitting ? <Loader2 className="animate-spin" size={18} /> : <Save size={18} />} Save Record
                 </button>
             </div>
@@ -686,12 +740,28 @@ export default function MembershipCardForm({
 
                     <div className="back-footer">
                         <div className="left-footer">
-                            <div style={{textAlign:'center', position:'relative', height: '30px', marginBottom: '2px'}}>
+                            <div style={{textAlign:'center', position:'relative', height: '80px', marginBottom: '2px'}}>
+                                <img 
+                                  src="/sign.png" 
+                                  alt="Signature" 
+                                  style={{
+                                    position: 'absolute',
+                                    bottom: '15px',
+                                    left: '50%',
+                                    transform: 'translateX(-50%)',
+                                    height: '60px',
+                                    width: 'auto',
+                                    objectFit: 'contain',
+                                    pointerEvents: 'none',
+                                    zIndex: 1,
+                                    filter: 'drop-shadow(0.4px 0.4px 0 #000) drop-shadow(-0.4px -0.4px 0 #000) drop-shadow(0.4px -0.4px 0 #000) drop-shadow(-0.4px 0.4px 0 #000)'
+                                  }} 
+                                />
                                 {/* Signature image placeholder or text */}
                                 <input 
                                   type="text" 
                                   defaultValue="JOCELYN Q. CARDENAS" 
-                                  style={{position:'absolute', bottom:0, left:0, textAlign:'center', fontWeight:'bold', fontSize:'18px', fontFamily:'Arial'}} 
+                                  style={{position:'absolute', bottom:0, left:0, width: '100%', textAlign:'center', fontWeight:'bold', fontSize:'18px', fontFamily:'Arial', zIndex: 2}} 
                                 />
                             </div>
                             <div className="auth-sig font-sans">

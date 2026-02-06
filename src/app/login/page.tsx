@@ -1,18 +1,42 @@
 "use client";
 
-import { useActionState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Mail, Lock, ArrowRight, Loader2 } from 'lucide-react';
-import { login } from './actions';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { app } from '@/lib/firebase';
 import TransitionScreen from '@/components/TransitionScreen';
 
-// Initial state for the form
-const initialState = {
-  error: '',
-};
-
 export default function LoginPage() {
-  const [state, formAction, isPending] = useActionState(login, initialState);
+  const router = useRouter();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [isPending, setIsPending] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsPending(true);
+    setError('');
+
+    try {
+      const auth = getAuth(app);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // Set cookie for middleware protection
+      document.cookie = `auth_token=${user.uid}; path=/; max-age=86400; SameSite=Lax`;
+
+      // Redirect
+      router.push('/admin/dashboard');
+    } catch (err: any) {
+      console.error("Login Error:", err);
+      setError('Invalid email or password.');
+    } finally {
+      setIsPending(false);
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-base-200 px-4">
@@ -28,7 +52,7 @@ export default function LoginPage() {
 
           {/* Form */}
           <div className="p-8">
-            <form action={formAction} className="flex flex-col gap-6">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-6">
               
               <div className="form-control">
                 <label className="label">
@@ -40,7 +64,8 @@ export default function LoginPage() {
                   </div>
                   <input 
                     type="email" 
-                    name="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     placeholder="you@example.com" 
                     className="input input-bordered w-full pl-10 bg-base-100 focus:border-primary focus:outline-none transition-all" 
                     required
@@ -59,7 +84,8 @@ export default function LoginPage() {
                   </div>
                   <input 
                     type="password" 
-                    name="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••" 
                     className="input input-bordered w-full pl-10 bg-base-100 focus:border-primary focus:outline-none transition-all" 
                     required
@@ -67,9 +93,9 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              {state?.error && (
+              {error && (
                 <div className="text-red-500 text-sm text-center font-medium bg-red-50 p-2 rounded">
-                  {state.error}
+                  {error}
                 </div>
               )}
 
