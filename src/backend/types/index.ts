@@ -35,7 +35,7 @@ export interface Membership {
   gender: string;
   coopName: string;
   dateIssued: string;
-  imageUrl?: string; // For the photo placeholder
+  imageUrl?: string | null; // For the photo placeholder
   
   // Back of card
   emergencyContact: string; // The "In Case of Emergency" box content

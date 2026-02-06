@@ -8,7 +8,7 @@ import { collection, addDoc, doc, updateDoc, Timestamp } from "firebase/firestor
 
 interface MembershipCardFormProps {
   initialData?: Membership;
-  onSubmit: (data: Partial<Membership>) => Promise<void>; // Kept for prop compatibility, but we might bypass
+  onSuccess: () => void;
   onCancel: () => void;
   isSubmitting: boolean;
 }
@@ -30,7 +30,7 @@ const PLACEHOLDER_LOGOS = {
 
 export default function MembershipCardForm({
   initialData,
-  onSubmit: parentOnSubmit, // Rename to avoid confusion
+  onSuccess,
   onCancel,
   isSubmitting: parentIsSubmitting,
 }: MembershipCardFormProps) {
@@ -119,7 +119,7 @@ export default function MembershipCardForm({
       }
 
       // 4. Notify Parent to close/refresh
-      await parentOnSubmit(dataToSave); 
+      onSuccess(); 
       
       setLocalIsSubmitting(false);
 

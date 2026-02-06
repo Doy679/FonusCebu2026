@@ -10,7 +10,6 @@ export default function MembershipPage() {
   const [memberships, setMemberships] = useState<Membership[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
   // Fetch memberships
@@ -58,31 +57,10 @@ export default function MembershipPage() {
     setView("FORM");
   };
 
-  const handleSubmit = async (data: Partial<Membership>) => {
-    setIsSubmitting(true);
-    try {
-      const url = editingId ? `/api/memberships/${editingId}` : "/api/memberships";
-      const method = editingId ? "PUT" : "POST";
-
-      const res = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-
-      if (res.ok) {
-        await fetchMemberships();
-        setView("LIST");
-        setEditingId(null);
-      } else {
-        const err = await res.json();
-        alert(`Error: ${err.error || "Failed to save"}`);
-      }
-    } catch (error) {
-      alert("An unexpected error occurred.");
-    } finally {
-      setIsSubmitting(false);
-    }
+  const handleSuccess = async () => {
+    await fetchMemberships();
+    setView("LIST");
+    setEditingId(null);
   };
 
   const filteredMemberships = memberships.filter((m) =>
@@ -97,9 +75,9 @@ export default function MembershipPage() {
     return (
       <MembershipCardForm
         initialData={initialData}
-        onSubmit={handleSubmit}
+        onSuccess={handleSuccess}
         onCancel={() => setView("LIST")}
-        isSubmitting={isSubmitting}
+        isSubmitting={false}
       />
     );
   }
