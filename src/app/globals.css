@@ -6,23 +6,28 @@
   prefersdark: false;
   color-scheme: light;
 
-  /* Precise Maroon-White Colors */
-  --color-base-100: oklch(98.5% 0.005 80); /* Off-white Cream */
-  --color-base-200: oklch(95% 0.01 80);
-  --color-base-300: oklch(90% 0.02 80);
-  --color-base-content: oklch(25% 0.02 20); /* Dark grey-maroon */
+  /* Precise Maroon-White Colors (Converted from oklch to hex for html2canvas compatibility) */
+  --color-base-100: #fcfaf2; /* Off-white Cream */
+  --color-base-200: #f5f2e8;
+  --color-base-300: #ebe7d9;
+  --color-base-content: #2d2626; /* Dark grey-maroon */
 
-  --color-primary: oklch(28% 0.08 20); /* Deep Maroon */
-  --color-primary-content: oklch(98% 0.01 80);
+  --color-primary: #520000; /* Deep Maroon */
+  --color-primary-content: #fcfaf2;
   
-  --color-secondary: oklch(40% 0.12 25); /* Rich Burgundy */
-  --color-secondary-content: oklch(98% 0.01 80);
+  --color-secondary: #7a1a1a; /* Rich Burgundy */
+  --color-secondary-content: #fcfaf2;
   
-  --color-accent: oklch(65% 0.15 30); /* Warm Maroon/Rose */
-  --color-accent-content: oklch(98% 0.01 80);
+  --color-accent: #b34d4d; /* Warm Maroon/Rose */
+  --color-accent-content: #fcfaf2;
   
-  --color-neutral: oklch(20% 0.04 20);
-  --color-neutral-content: oklch(98% 0.01 80);
+  --color-neutral: #332b2b;
+  --color-neutral-content: #fcfaf2;
+
+  --color-info: #3abff8;
+  --color-success: #36d399;
+  --color-warning: #fbbd23;
+  --color-error: #f87272;
   
   --radius-selector: 50px;
   --radius-field: 16px;
