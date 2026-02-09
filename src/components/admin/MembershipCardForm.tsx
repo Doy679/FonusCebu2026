@@ -267,7 +267,11 @@ export default function MembershipCardForm({
         const fullNameIdx = findCol(['full name', 'fullname', 'member name', 'name of member', 'complete name']);
         const gIdx = findCol(['gender', 'sex']);
         const bIdx = findCol(['birthdate', 'birth date', 'b-date', 'date of birth', 'dob', 'bday']);
-        const addrIdx = findCol(['address', 'present address', 'residence', 'home address', 'location']);
+        
+        // Identify all potential address columns for fallback
+        const primaryAddrIdx = findCol(['present address', 'current address', 'present_address', 'residential address']);
+        const secondaryAddrIdx = findCol(['address', 'residence', 'location', 'addr', 'home', 'brgy', 'city', 'home address']);
+        const addrIndices = [primaryAddrIdx, secondaryAddrIdx].filter(idx => idx !== -1);
 
         const recordsToImport = jsonData.slice(headerRowIndex + 1).filter(row => {
           // Robust check: ensure at least one name column has content and is not a skip keyword
@@ -287,10 +291,10 @@ export default function MembershipCardForm({
         }
 
         const sheetMembers = recordsToImport.map(row => {
-          const getVal = (idx: number) => (idx !== -1 && row[idx]) ? String(row[idx]).trim() : '';
+          const getVal = (idx: number) => (idx !== -1 && row[idx] !== undefined && row[idx] !== null) ? String(row[idx]).trim() : '';
           
           let fullName = "";
-          if (fullNameIdx !== -1) {
+          if (fullNameIdx !== -1 && getVal(fullNameIdx)) {
             fullName = getVal(fullNameIdx);
           } else {
             const firstName = getVal(fNameIdx);
@@ -308,6 +312,16 @@ export default function MembershipCardForm({
              birthdate = date.toLocaleDateString('en-US');
           }
 
+          // Smart Address Picker: Try primary, then secondary if empty
+          let address = "";
+          for (const idx of addrIndices) {
+            const val = getVal(idx);
+            if (val && val.length > 1) {
+              address = val;
+              break;
+            }
+          }
+
           const coopName = sheetName.toUpperCase();
           const records = DEFAULT_RECORDS.map(r => 
             r.year === "2025" 
@@ -318,7 +332,7 @@ export default function MembershipCardForm({
           return {
             ...DEFAULT_MEMBER,
             name: fullName,
-            presentAddress: getVal(addrIdx).toUpperCase(),
+            presentAddress: address.toUpperCase(),
             birthdate: birthdate,
             gender: getVal(gIdx).toUpperCase(),
             coopName: coopName,
