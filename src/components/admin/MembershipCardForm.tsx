@@ -21,7 +21,7 @@ const DEFAULT_RECORDS: MembershipRecord[] = [
   { year: "2022", package: "", validity: "", representative: "", remarks: "" },
   { year: "2023", package: "", validity: "", representative: "", remarks: "" },
   { year: "2024", package: "", validity: "", representative: "", remarks: "" },
-  { year: "2025", package: "", validity: "", representative: "", remarks: "" },
+  { year: "2025", package: "DIGNITY", validity: "1 YEAR", representative: "", remarks: "NEW" },
   { year: "2026", package: "", validity: "", representative: "", remarks: "" },
   { year: "2027", package: "", validity: "", representative: "", remarks: "" },
 ];
@@ -31,7 +31,7 @@ const DEFAULT_MEMBER: Partial<Membership> = {
   presentAddress: "",
   birthdate: "",
   gender: "",
-  coopName: "COWASCO-MPC",
+  coopName: "",
   dateIssued: "JAN-DEC 2025",
   emergencyContact: "",
   records: DEFAULT_RECORDS,
@@ -84,7 +84,19 @@ export default function MembershipCardForm({
     const trueIndex = indexOfFirstItem + index;
     setMembersList(prev => {
       const newList = [...prev];
-      newList[trueIndex] = { ...newList[trueIndex], [field]: value };
+      const member = { ...newList[trueIndex], [field]: value };
+      
+      // If coopName changes, sync it with the 2025 representative
+      if (field === 'coopName') {
+        const newRecords = [...(member.records || DEFAULT_RECORDS)];
+        const record2025Index = newRecords.findIndex(r => r.year === "2025");
+        if (record2025Index !== -1) {
+          newRecords[record2025Index] = { ...newRecords[record2025Index], representative: value };
+          member.records = newRecords;
+        }
+      }
+      
+      newList[trueIndex] = member;
       return newList;
     });
   };
@@ -260,13 +272,21 @@ export default function MembershipCardForm({
              birthdate = date.toLocaleDateString('en-US');
           }
 
+          const coopName = sheetName.toUpperCase();
+          const records = DEFAULT_RECORDS.map(r => 
+            r.year === "2025" 
+              ? { ...r, package: "DIGNITY", validity: "1 YEAR", representative: coopName, remarks: "NEW" }
+              : { ...r }
+          );
+
           return {
             ...DEFAULT_MEMBER,
             name: fullName,
             presentAddress: getVal(6).toUpperCase(),
             birthdate: birthdate,
             gender: getVal(3).toUpperCase(),
-            coopName: sheetName.toUpperCase(),
+            coopName: coopName,
+            records: records,
           };
         });
 
@@ -312,7 +332,7 @@ export default function MembershipCardForm({
             presentAddress: member.presentAddress || "",
             birthdate: member.birthdate || "",
             gender: member.gender || "",
-            coopName: member.coopName || "COWASCO-MPC",
+            coopName: member.coopName || "",
             dateIssued: member.dateIssued || "JAN-DEC 2025",
             emergencyContact: member.emergencyContact || "",
             imageUrl: member.imageUrl || null,
