@@ -3,14 +3,16 @@
 import { useState, useEffect } from "react";
 import { Membership } from "@/backend/types";
 import MembershipCardForm from "@/components/admin/MembershipCardForm";
-import { Plus, Edit, Trash2, Search, Loader2 } from "lucide-react";
+import MembershipPrint from "@/components/admin/MembershipPrint";
+import { Plus, Edit, Trash2, Search, Loader2, Printer } from "lucide-react";
 
 export default function MembershipPage() {
-  const [view, setView] = useState<"LIST" | "FORM">("LIST");
+  const [view, setView] = useState<"LIST" | "FORM" | "PRINT">("LIST");
   const [memberships, setMemberships] = useState<Membership[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [printMembers, setPrintMembers] = useState<Membership[]>([]);
 
   // Fetch memberships
   useEffect(() => {
@@ -35,6 +37,16 @@ export default function MembershipPage() {
   const handleEdit = (id: string) => {
     setEditingId(id);
     setView("FORM");
+  };
+
+  const handlePrint = (member: Membership) => {
+    setPrintMembers([member]);
+    setView("PRINT");
+  };
+
+  const handlePrintAll = () => {
+    setPrintMembers(filteredMemberships);
+    setView("PRINT");
   };
 
   const handleDelete = async (id: string) => {
@@ -78,6 +90,15 @@ export default function MembershipPage() {
         onSuccess={handleSuccess}
         onCancel={() => setView("LIST")}
         isSubmitting={false}
+      />
+    );
+  }
+
+  if (view === "PRINT") {
+    return (
+      <MembershipPrint
+        memberships={printMembers}
+        onClose={() => setView("LIST")}
       />
     );
   }
@@ -133,6 +154,13 @@ export default function MembershipPage() {
                     <td>{member.coopName}</td>
                     <td>{member.dateIssued}</td>
                     <td className="flex justify-end gap-2">
+                      <button
+                        onClick={() => handlePrint(member)}
+                        className="btn btn-sm btn-ghost text-green-600 hover:bg-green-50"
+                        title="Print Card"
+                      >
+                        <Printer size={16} />
+                      </button>
                       <button
                         onClick={() => handleEdit(member.id)}
                         className="btn btn-sm btn-ghost text-blue-600 hover:bg-blue-50"
