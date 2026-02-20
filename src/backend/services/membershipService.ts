@@ -17,8 +17,8 @@ import { Membership } from '../types';
 const COLLECTION_NAME = 'memberships';
 
 // Helper to remove undefined values
-const cleanData = (data: any) => {
-  const cleaned: any = {};
+const cleanData = (data: Record<string, any>) => {
+  const cleaned: Record<string, any> = {};
   Object.keys(data).forEach(key => {
     if (data[key] !== undefined) {
       cleaned[key] = data[key];

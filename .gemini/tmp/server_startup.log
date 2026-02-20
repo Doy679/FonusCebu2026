@@ -1,0 +1,20 @@
+
+> fonus-cebu@0.1.0 dev
+> next dev
+
+⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of /home/gonzales/package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * /home/gonzales/Desktop/FONUS/FONUS-CEBU/package-lock.json
+   * /home/gonzales/Desktop/package-lock.json
+
+▲ Next.js 16.1.4 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.1.129:3000
+
+✓ Starting...
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+✓ Ready in 867ms
+[?25h

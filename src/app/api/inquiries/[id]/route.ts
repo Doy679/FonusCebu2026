@@ -1,15 +1,15 @@
 import { NextResponse } from 'next/server';
 import { inquiryService } from '@/backend/services/inquiryService';
 
-type Props = {
-  params: Promise<{ id: string }>
-}
+export const dynamic = "force-dynamic";
 
-// GET: Fetch a single inquiry
-export async function GET(request: Request, props: Props) {
-  const params = await props.params;
+export async function GET(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
-    const inquiry = await inquiryService.getById(params.id);
+    const { id } = await params;
+    const inquiry = await inquiryService.getById(id);
     if (!inquiry) {
       return NextResponse.json({ error: 'Inquiry not found' }, { status: 404 });
     }
@@ -20,11 +20,14 @@ export async function GET(request: Request, props: Props) {
 }
 
 // PATCH: Update an inquiry (e.g., status)
-export async function PATCH(request: Request, props: Props) {
-  const params = await props.params;
+export async function PATCH(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
+    const { id } = await params;
     const body = await request.json();
-    const updatedInquiry = await inquiryService.update(params.id, body);
+    const updatedInquiry = await inquiryService.update(id, body);
     
     if (!updatedInquiry) {
       return NextResponse.json({ error: 'Inquiry not found' }, { status: 404 });

@@ -1,6 +1,6 @@
-import { initializeApp, getApps, getApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import { initializeApp, getApps, getApp, FirebaseApp } from "firebase/app";
+import { getFirestore, Firestore } from "firebase/firestore";
+import { getAuth, Auth } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -11,9 +11,55 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-// Initialize Firebase (Singleton pattern to avoid re-initialization)
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-const db = getFirestore(app);
-const auth = getAuth(app);
+const hasConfig = !!firebaseConfig.apiKey;
 
-export { app, db, auth };
+// Initialize Firebase (Singleton pattern)
+let appInstance: FirebaseApp | undefined;
+let dbInstance: Firestore | undefined;
+let authInstance: Auth | undefined;
+
+const getAppInstance = (): FirebaseApp => {
+  if (appInstance) return appInstance;
+  
+  if (hasConfig) {
+    appInstance = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+  } else {
+    // Return a dummy object if no config (e.g. during build)
+    appInstance = {
+      name: '[DEFAULT]',
+      options: {},
+      automaticDataCollectionEnabled: false,
+    } as FirebaseApp;
+  }
+  return appInstance;
+};
+
+// We use getters for db and auth but export them as constants via proxy if needed
+// or just export them as the result of a safe call.
+
+const getDbInstance = (): Firestore => {
+  if (dbInstance) return dbInstance;
+  const app = getAppInstance();
+  if (hasConfig) {
+    dbInstance = getFirestore(app);
+  } else {
+    dbInstance = {} as Firestore;
+  }
+  return dbInstance;
+};
+
+const getAuthInstance = (): Auth => {
+  if (authInstance) return authInstance;
+  const app = getAppInstance();
+  if (hasConfig) {
+    authInstance = getAuth(app);
+  } else {
+    authInstance = {} as Auth;
+  }
+  return authInstance;
+};
+
+// Export as constants for backward compatibility
+export const app = getAppInstance();
+export const db = getDbInstance();
+export const auth = getAuthInstance();

@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { membershipService } from '@/backend/services/membershipService';
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   try {
     const memberships = await membershipService.getAll();
@@ -21,8 +23,9 @@ export async function POST(request: Request) {
     
     const newMembership = await membershipService.create(body);
     return NextResponse.json(newMembership, { status: 201 });
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error creating membership:', error);
-    return NextResponse.json({ error: error.message || 'Failed to create membership' }, { status: 500 });
+    const message = error instanceof Error ? error.message : 'Failed to create membership';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

@@ -30,9 +30,10 @@ export default function LoginPage() {
 
       // Redirect
       router.push('/admin/dashboard');
-    } catch (err: any) {
+    } catch (err) {
       console.error("Login Error:", err);
-      setError('Invalid email or password.');
+      const errorMessage = err instanceof Error ? err.message : "An unknown error occurred";
+      setError(errorMessage);
     } finally {
       setIsPending(false);
     }

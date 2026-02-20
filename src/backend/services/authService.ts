@@ -1,14 +1,11 @@
 import { 
-  getAuth, 
   signInWithEmailAndPassword, 
   signOut, 
   onAuthStateChanged,
   User as FirebaseUser
 } from "firebase/auth";
-import { app } from "@/lib/firebase";
+import { auth } from "@/lib/firebase";
 import { User } from "../types";
-
-const auth = getAuth(app);
 
 export const authService = {
   login: async (email: string, password: string): Promise<User | null> => {

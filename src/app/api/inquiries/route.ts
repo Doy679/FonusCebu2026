@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { inquiryService } from '@/backend/services/inquiryService';
 
+export const dynamic = "force-dynamic";
+
 // GET: Fetch all inquiries (Admin only)
 export async function GET() {
   // In a real app, we would check the 'auth_token' cookie here to ensure the user is an admin

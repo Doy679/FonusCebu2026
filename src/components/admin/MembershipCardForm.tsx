@@ -160,16 +160,16 @@ export default function MembershipCardForm({
 
       for (const sheetName of workbook.SheetNames) {
         const worksheet = workbook.Sheets[sheetName];
-        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 }) as any[][];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 }) as unknown[][];
 
         const headerRowIndex = jsonData.findIndex(row => 
-          row.some(cell => String(cell).toLowerCase().includes('family') || String(cell).toLowerCase().includes('first name'))
+          row.some(cell => String(cell || '').toLowerCase().includes('family') || String(cell || '').toLowerCase().includes('first name'))
         );
         
         if (headerRowIndex === -1) continue;
 
         const skipKeywords = ['billing', 'rate', 'total', 'grand total', 'count'];
-        const headerRow = jsonData[headerRowIndex] as any[];
+        const headerRow = jsonData[headerRowIndex] as unknown[];
         const findCol = (keywords: string[]) => 
           headerRow.findIndex(cell => 
             keywords.some(kw => String(cell || '').toLowerCase().includes(kw))
@@ -222,7 +222,8 @@ export default function MembershipCardForm({
         if (membersList.length === 1 && !membersList[0].name) setMembersList(allNewMembers);
         else if(confirm(`Found ${allNewMembers.length} members. Click OK to generate all cards.`)) setMembersList(allNewMembers);
       } else alert("No valid records found.");
-    } catch (error: any) {
+    } catch (error) {
+      console.error("Excel Import Error:", error);
       alert("Failed to parse Excel file.");
     } finally {
       setLocalIsSubmitting(false);
@@ -243,11 +244,11 @@ export default function MembershipCardForm({
 
     setLocalIsSubmitting(true);
     try {
-      const auth = getAuth(app);
-      if (!auth.currentUser) await signInAnonymously(auth);
+      const authInstance = getAuth(app);
+      if (!authInstance.currentUser) await signInAnonymously(authInstance);
 
       const batchPromises = membersList.map(async (member) => {
-          const dataToSave = {
+          const dataToSave: Record<string, unknown> = {
             name: member.name || "",
             presentAddress: member.presentAddress || "",
             birthdate: member.birthdate || "",
@@ -268,8 +269,9 @@ export default function MembershipCardForm({
       await Promise.all(batchPromises);
       alert(`Successfully saved ${membersList.length} records!`);
       onSuccess(); 
-    } catch (error: any) {
-      alert(`Failed to save: ${error.message}`);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      alert(`Failed to save: ${message}`);
     } finally {
       setLocalIsSubmitting(false);
     }

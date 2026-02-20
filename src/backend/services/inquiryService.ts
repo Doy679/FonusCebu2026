@@ -81,9 +81,10 @@ export const inquiryService = {
       const inquiryRef = doc(db, COLLECTION_NAME, id);
       
       // Remove id from updates if present to avoid overwriting document ID
-      const { id: _, ...cleanUpdates } = updates as any;
+      const cleanUpdates = { ...updates };
+      delete cleanUpdates.id;
       
-      await updateDoc(inquiryRef, cleanUpdates);
+      await updateDoc(inquiryRef, cleanUpdates as Record<string, any>);
       
       // Fetch the updated document to return it
       const updatedSnap = await getDoc(inquiryRef);
