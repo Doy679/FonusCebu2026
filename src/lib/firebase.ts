@@ -11,6 +11,12 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
+console.log("Firebase Config Check:", {
+  apiKey: !!firebaseConfig.apiKey,
+  projectId: !!firebaseConfig.projectId,
+  hasConfig: !!firebaseConfig.apiKey
+});
+
 const hasConfig = !!firebaseConfig.apiKey;
 
 // Initialize Firebase (Singleton pattern)

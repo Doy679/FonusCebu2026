@@ -9,7 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "firebase": "^12.8.0",
+    "firebase": "^12.9.0",
     "html2canvas": "^1.4.1",
     "jspdf": "^4.1.0",
     "lucide-react": "^0.562.0",

@@ -1,0 +1,21 @@
+[debug] [2026-02-20T07:45:01.917Z] ----------------------------------------------------------------------
+[debug] [2026-02-20T07:45:01.919Z] Command:       /usr/bin/node /usr/bin/firebase Deploy
+[debug] [2026-02-20T07:45:01.919Z] CLI Version:   15.7.0
+[debug] [2026-02-20T07:45:01.920Z] Platform:      linux
+[debug] [2026-02-20T07:45:01.920Z] Node Version:  v25.2.0
+[debug] [2026-02-20T07:45:01.920Z] Time:          Fri Feb 20 2026 15:45:01 GMT+0800 (Philippine Standard Time)
+[debug] [2026-02-20T07:45:01.920Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-02-20T07:45:02.625Z] TypeError: Cannot read properties of undefined (reading 'indexOf')
+    at new Option (/usr/lib/node_modules/firebase-tools/node_modules/commander/index.js:23:27)
+    at Command._optionEx (/usr/lib/node_modules/firebase-tools/node_modules/commander/index.js:438:20)
+    at Command.option (/usr/lib/node_modules/firebase-tools/node_modules/commander/index.js:556:17)
+    at /usr/lib/node_modules/firebase-tools/lib/command.js:79:17
+    at Array.forEach (<anonymous>)
+    at Command.register (/usr/lib/node_modules/firebase-tools/lib/command.js:77:22)
+    at runner.load (/usr/lib/node_modules/firebase-tools/lib/commands/index.js:17:42)
+    at Command.<anonymous> (/usr/lib/node_modules/firebase-tools/lib/index.js:95:13)
+    at Command.listener [as _actionHandler] (/usr/lib/node_modules/firebase-tools/node_modules/commander/index.js:413:31)
+    at Command._parseCommand (/usr/lib/node_modules/firebase-tools/node_modules/commander/index.js:914:14)
+[error] 
+[error] Error: An unexpected error has occurred.
