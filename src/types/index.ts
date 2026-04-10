@@ -8,20 +8,53 @@ export interface SiteData {
   offers: string[];
   contact: ContactData;
   board: BoardMember[];
-}
+  faqs?: FAQData[];
+  testimonials?: TestimonialData[];
+  processSteps?: ProcessStep[];
+  planningGuide?: PlanningGuideItem[];
+  }
 
-export interface GeneralData {
+  export interface PlanningGuideItem {
+  step: string;
+  action: string;
+  details: string;
+  }
+
+  export interface ProcessStep {
+  title: string;
+  description: string;
+  icon: string;
+  }
+
+  export interface FAQData {
+  question: string;
+  answer: string;
+  }
+
+  export interface TestimonialData {
+  name: string;
+  role: string;
+  content: string;
+  date: string;
+  }
+
+  export interface GeneralData {
   name: string;
   fullName: string;
   taglineLocal?: string;
-}
+  fullContractYears?: number;
+  officeHours?: string;
+  registrationNumber?: string;
+  }
 
-export interface HeroData {
-  title: string;
-  subtitle: string;
-  buttonText: string;
-  badge?: string;
-}
+  export interface HeroData {
+  ...
+  export interface BoardMember {
+  name: string;
+  role?: string;
+  affiliation: string;
+  image?: string;
+  }
 
 export interface AboutData {
   vision: string;
@@ -44,9 +77,12 @@ export interface HumaneValue {
 
 export interface PackageData {
   name: string;
+  tier?: string; // e.g. "Basic Plan"
   price: string; // Used for display (usually monthly)
   contractPrice?: string;
   spotCash?: string;
+  spotCashSavings?: string; // Percentage e.g. "10%"
+  monthlyContractMonths?: number; // e.g. 60
   features: string[];
   color: string;
   featured?: boolean;
