@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Manrope, Playfair_Display } from "next/font/google";
 import "./globals.css";
+import { LanguageProvider } from "@/lib/LanguageContext";
+import FloatingActions from "@/components/FloatingActions";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -16,7 +18,28 @@ const playfair = Playfair_Display({
 
 export const metadata: Metadata = {
   title: "FONUS CEBU | Federation Cooperative",
-  description: "The most trusted funeral and memorial provider in our country.",
+  description: "The most trusted funeral and memorial provider in our country. Providing decent and affordable memorial services in Cebu since 2009.",
+  openGraph: {
+    title: "FONUS CEBU | Federation Cooperative",
+    description: "The most trusted funeral and memorial provider in our country.",
+    url: "https://fonuscebu.com",
+    siteName: "FONUS CEBU",
+    images: [
+      {
+        url: "/fonus.webp",
+        width: 800,
+        height: 600,
+      },
+    ],
+    locale: "en_PH",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "FONUS CEBU | Federation Cooperative",
+    description: "The most trusted funeral and memorial provider in our country.",
+    images: ["/fonus.webp"],
+  },
 };
 
 export default function RootLayout({
@@ -29,7 +52,10 @@ export default function RootLayout({
       <body
         className={`${manrope.variable} ${playfair.variable} antialiased min-h-screen flex flex-col font-sans`}
       >
-        {children}
+        <LanguageProvider>
+          {children}
+          <FloatingActions />
+        </LanguageProvider>
       </body>
     </html>
   );

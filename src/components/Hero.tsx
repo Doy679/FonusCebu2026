@@ -1,6 +1,12 @@
+"use client";
+
 import { siteData } from '@/data/siteData';
+import { Reveal } from './Reveal';
+import { useLanguage } from '@/lib/LanguageContext';
 
 export default function Hero() {
+  const { t } = useLanguage();
+
   return (
     <section id="home" className="hero-section min-h-[90vh] flex items-center justify-center relative overflow-hidden">
       {/* Video Background */}
@@ -27,31 +33,38 @@ export default function Hero() {
 
       <div className="hero-content relative z-10 max-w-5xl text-center md:text-left px-6 pt-24 pb-12 animate-fade-in flex flex-col items-center md:items-start w-full">
         
-        <span className="hero-badge inline-block border-2 border-accent/30 text-accent bg-black/20 backdrop-blur-md px-8 py-2.5 rounded-full text-xs font-bold tracking-[4px] uppercase mb-10 shadow-sm">
-          {siteData.hero.badge}
-        </span>
-        
-        <h1 className="hero-title text-4xl md:text-8xl font-serif font-bold mb-10 leading-[1.3] tracking-tight text-white drop-shadow-2xl uppercase">
-          WE VALUE <br />
-          <span className="inline-block pb-3 pr-3 -mb-3 text-transparent bg-clip-text bg-gradient-to-r from-accent via-white to-accent italic normal-case leading-normal">
-            Human Dignity
+        <Reveal delay={0.2}>
+          <span className="hero-badge inline-block border-2 border-accent/30 text-accent bg-black/20 backdrop-blur-md px-8 py-2.5 rounded-full text-xs font-bold tracking-[4px] uppercase mb-10 shadow-sm">
+            {t('hero_badge')}
           </span>
-        </h1>
+        </Reveal>
         
-        <p className="hero-desc text-lg md:text-2xl text-white/90 mb-14 max-w-2xl leading-relaxed font-medium drop-shadow-lg">
-          {siteData.hero.subtitle}
-        </p>
+        <Reveal delay={0.4} width="100%">
+          <h1 className="hero-title text-4xl md:text-8xl font-serif font-bold mb-10 leading-[1.3] tracking-tight text-white drop-shadow-2xl uppercase">
+            {t('hero_title').split('HUMAN DIGNITY')[0]} <br />
+            <span className="inline-block pb-3 pr-3 -mb-3 text-transparent bg-clip-text bg-gradient-to-r from-accent via-white to-accent italic normal-case leading-normal">
+              Human Dignity
+            </span>
+          </h1>
+        </Reveal>
         
-        <div className="flex flex-col sm:flex-row gap-8 justify-center md:justify-start w-full sm:w-auto">
-          <a href="#packages" className="btn btn-primary bg-accent text-primary border-accent hover:bg-white hover:text-primary transition-all transform hover:-translate-y-1 hover:shadow-2xl rounded-full px-12 py-5 h-auto min-h-[4rem] text-base font-bold tracking-widest shadow-xl">
-            {siteData.hero.buttonText}
-          </a>
-          <a href="#about" className="btn btn-outline border-white/40 text-white hover:bg-white hover:text-primary hover:border-white transition-all transform hover:-translate-y-1 hover:shadow-xl rounded-full px-12 py-5 h-auto min-h-[4rem] text-base font-bold tracking-widest backdrop-blur-sm bg-white/10">
-            Learn More
-          </a>
-        </div>
+        <Reveal delay={0.6} width="100%">
+          <p className="hero-desc text-lg md:text-2xl text-white/90 mb-14 max-w-2xl leading-relaxed font-medium drop-shadow-lg">
+            {t('hero_subtitle')}
+          </p>
+        </Reveal>
+        
+        <Reveal delay={0.8}>
+          <div className="flex flex-col sm:flex-row gap-8 justify-center md:justify-start w-full sm:w-auto">
+            <a href="#packages" className="btn btn-primary bg-accent text-primary border-accent hover:bg-white hover:text-primary transition-all transform hover:-translate-y-1 hover:shadow-2xl rounded-full px-12 py-5 h-auto min-h-[4rem] text-base font-bold tracking-widest shadow-xl">
+              {t('hero_button')}
+            </a>
+            <a href="#about" className="btn btn-outline border-white/40 text-white hover:bg-white hover:text-primary hover:border-white transition-all transform hover:-translate-y-1 hover:shadow-xl rounded-full px-12 py-5 h-auto min-h-[4rem] text-base font-bold tracking-widest backdrop-blur-sm bg-white/10">
+              {t('nav_about')}
+            </a>
+          </div>
+        </Reveal>
       </div>
     </section>
   );
 }
-
