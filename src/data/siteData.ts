@@ -4,7 +4,10 @@ export const siteData: SiteData = {
   general: {
     name: "FONUS CEBU",
     fullName: "FONUS CEBU FEDERATION COOPERATIVE",
-    taglineLocal: "Usa sa labing barato ug Trusted Funeral Services sa Cebu"
+    taglineLocal: "Usa sa labing barato ug Trusted Funeral Services sa Cebu",
+    fullContractYears: 5,
+    officeHours: "24/7 Service | Office: Mon-Sat 8:00 AM - 5:00 PM",
+    registrationNumber: "CDA Reg. No. 9520-07019145"
   },
   hero: {
     badge: "Region 7's Pioneer",
@@ -29,13 +32,16 @@ export const siteData: SiteData = {
   },
   packages: [
     {
-      name: "ROSA PEACE MEMORIAL PLAN",
+      name: "ROSA PEACE PLAN",
+      tier: "Basic Plan",
       price: "₱267",
       contractPrice: "₱16,020",
       spotCash: "₱14,418",
+      spotCashSavings: "10%",
+      monthlyContractMonths: 60,
       features: [
         "9 Days Home Viewing",
-        "Registry of Deceased Info",
+        "Registry of Deceased Information",
         "Tarpaulin & Vigil Candles",
         "Guest Book"
       ],
@@ -44,13 +50,16 @@ export const siteData: SiteData = {
     },
     {
       name: "RED ROSE PLAN",
+      tier: "Standard Plan",
       price: "₱516",
       contractPrice: "₱30,960",
       spotCash: "₱27,864",
+      spotCashSavings: "10%",
+      monthlyContractMonths: 60,
       features: [
         "9 Days Home Viewing",
-        "2 CTC of Death Certificate",
-        "1 Big Tripod Flowers",
+        "2 Certified True Copies of Death Certificate",
+        "1 Large Tripod Flower Arrangement",
         "Tribute with Flowers",
         "Registry & Tarpaulin"
       ],
@@ -60,13 +69,16 @@ export const siteData: SiteData = {
     },
     {
       name: "WHITE ROSE PLAN",
+      tier: "Premium Plan",
       price: "₱1,075",
       contractPrice: "₱64,500",
       spotCash: "₱58,050",
+      spotCashSavings: "10%",
+      monthlyContractMonths: 60,
       features: [
         "9 Days Home Viewing",
-        "3 CTC of Death Certificate",
-        "2 Big Tripod Flowers",
+        "3 Certified True Copies of Death Certificate",
+        "2 Large Tripod Flower Arrangements",
         "Tribute with Flowers",
         "Registry & Tarpaulin"
       ],
@@ -122,8 +134,85 @@ export const siteData: SiteData = {
     facebook: "https://www.facebook.com/profile.php?id=61579850414509"
   },
   board: [
-    { name: "Mariolito Del Castillo", affiliation: "MAVENCO COOP" },
-    { name: "Macario Quevedo", affiliation: "CEBU PEOPLES COOP" },
-    { name: "Reynaldo Gandionco", affiliation: "FAIRCHILD COOP" }
+    { name: "Mariolito Del Castillo", role: "Chairperson", affiliation: "MAVENCO COOP" },
+    { name: "Macario Quevedo", role: "Vice Chairperson", affiliation: "CEBU PEOPLES COOP" },
+    { name: "Reynaldo Gandionco", role: "Director", affiliation: "FAIRCHILD COOP" }
+  ],
+  faqs: [
+    {
+      question: "Is the plan transferable to other people?",
+      answer: "Yes, our plans are fully transferable. You can transfer the benefits to any family member or friend in need."
+    },
+    {
+      question: "Are there any age limits for the memorial plans?",
+      answer: "We offer plans with no age limit, ensuring that everyone can have peace of mind regarding their future memorial needs."
+    },
+    {
+      question: "Can I upgrade my existing plan later?",
+      answer: "Absolutely! Our plans are upgradable. You can start with a basic plan and move to a higher-tier plan as your needs change."
+    },
+    {
+      question: "Is there a contestability period?",
+      answer: "One of the unique benefits of FONUS Cebu is that we have no contestability period for our members."
+    }
+  ],
+  testimonials: [
+    {
+      name: "Maria Santos",
+      role: "Cooperative Member",
+      content: "FONUS Cebu provided our family with dignified service when we needed it most. Their staff was incredibly supportive and professional.",
+      date: "Oct 2024"
+    },
+    {
+      name: "Juan Dela Cruz",
+      role: "Policy Holder",
+      content: "The monthly payments are very affordable. It gives me peace of mind knowing that everything is already prepared for the future.",
+      date: "Jan 2025"
+    },
+    {
+      name: "Elena G.",
+      role: "Member",
+      content: "Excellent service and very transparent pricing. The spot cash discount was a great help for our budget.",
+      date: "Dec 2024"
+    }
+  ],
+  processSteps: [
+    {
+      title: "Choose Your Plan",
+      description: "Select the Rosa Peace, Red Rose, or White Rose plan that fits your family's needs.",
+      icon: "Search"
+    },
+    {
+      title: "Submit Inquiry",
+      description: "Fill out the simple form or chat with us. We'll handle the paperwork for you.",
+      icon: "Send"
+    },
+    {
+      title: "Official Membership",
+      description: "Receive your Membership ID and enjoy the security of a Cooperative-backed plan.",
+      icon: "ShieldCheck"
+    }
+  ],
+  planningGuide: [
+    {
+      step: "Immediate Actions",
+      action: "Call our 24/7 Hotline",
+      details: "In the event of a death, call us immediately at 0943-653-0264. We will guide you through the initial steps."
+    },
+    {
+      step: "Documentation",
+      action: "Prepare Valid IDs",
+      details: "Have the valid ID of the deceased and the claimant ready. We will assist with the Death Certificate registration."
+    },
+    {
+      step: "Arrangements",
+      action: "Choose Service Type",
+      details: "Decide between home viewing or chapel viewing. Our team will handle the transport and set-up."
+    },
+    {
+      step: "Support",
+      action: "Cooperative Assistance",
+      details: "As a member, we will help you process any cash assistance or benefits from your specific cooperative program."
+    }
   ]
 };
