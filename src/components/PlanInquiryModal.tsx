@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Send, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 
 interface PlanInquiryModalProps {
@@ -20,15 +21,32 @@ export default function PlanInquiryModal({ isOpen, onClose, planName }: PlanInqu
   });
   const [status, setStatus] = useState<'IDLE' | 'LOADING' | 'SUCCESS' | 'ERROR'>('IDLE');
   const [errorMsg, setErrorMsg] = useState('');
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // 1. Lock scroll when modal is open
+  useEffect(() => {
     if (isOpen) {
+      const originalStyle = window.getComputedStyle(document.body).overflow;
       document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
+      return () => {
+        document.body.style.overflow = originalStyle === 'hidden' ? 'unset' : originalStyle;
+      };
     }
-    return () => { document.body.style.overflow = 'unset'; };
   }, [isOpen]);
+
+  // 2. Auto-fill message based on plan when the modal OPENS
+  useEffect(() => {
+    if (isOpen && planName) {
+      setFormData(prev => ({
+        ...prev,
+        message: `I am interested in the ${planName}. Please provide more details on how to apply.`
+      }));
+    }
+  }, [isOpen, planName]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -62,8 +80,8 @@ export default function PlanInquiryModal({ isOpen, onClose, planName }: PlanInqu
         body: JSON.stringify({
           ...formData,
           plan: planName,
-          subject: `Inquiry for ${planName} Plan`,
-          message: formData.message || `I am interested in the ${planName} plan.`
+          subject: `Inquiry for ${planName}`,
+          message: formData.message
         }),
       });
 
@@ -85,9 +103,9 @@ export default function PlanInquiryModal({ isOpen, onClose, planName }: PlanInqu
     }
   };
 
-  if (!isOpen) return null;
+  if (!isOpen || !mounted) return null;
 
-  return (
+  const modalContent = (
     <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4">
       {/* Backdrop */}
       <div 
@@ -122,7 +140,7 @@ export default function PlanInquiryModal({ isOpen, onClose, planName }: PlanInqu
               <div>
                 <h4 className="text-xl font-bold text-primary mb-1">Message Sent!</h4>
                 <p className="text-sm text-base-content/70">
-                  We will contact you shortly about the<br/><strong>{planName} Plan</strong>.
+                  We will contact you shortly about the<br/><strong>{planName}</strong>.
                 </p>
               </div>
             </div>
@@ -146,18 +164,20 @@ export default function PlanInquiryModal({ isOpen, onClose, planName }: PlanInqu
                   value={formData.name}
                   onChange={handleChange}
                   className="input input-bordered w-full bg-white focus:border-primary focus:outline-none rounded-xl h-10 text-sm" 
+                  placeholder="e.g. Juan Dela Cruz"
                   required 
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="form-control">
-                  <label className="label py-0 pb-1"><span className="label-text font-bold text-primary/70 text-[10px] uppercase tracking-wider">Phone</span></label>
+                  <label className="label py-0 pb-1"><span className="label-text font-bold text-primary/70 text-[10px] uppercase tracking-wider">Phone Number</span></label>
                   <input 
                     type="tel" 
                     name="phone" 
                     value={formData.phone}
                     onChange={handleChange}
+                    placeholder="09171234567"
                     className={`input input-bordered w-full bg-white focus:border-primary focus:outline-none rounded-xl h-10 text-sm ${errorMsg.includes('phone') ? 'border-error' : ''}`} 
                     required 
                   />
@@ -169,6 +189,7 @@ export default function PlanInquiryModal({ isOpen, onClose, planName }: PlanInqu
                     name="email" 
                     value={formData.email}
                     onChange={handleChange}
+                    placeholder="juan@example.com"
                     className="input input-bordered w-full bg-white focus:border-primary focus:outline-none rounded-xl h-10 text-sm" 
                   />
                 </div>
@@ -181,18 +202,19 @@ export default function PlanInquiryModal({ isOpen, onClose, planName }: PlanInqu
                   name="address" 
                   value={formData.address}
                   onChange={handleChange}
+                  placeholder="Street, Barangay, City, Province"
                   className="input input-bordered w-full bg-white focus:border-primary focus:outline-none rounded-xl h-10 text-sm" 
                   required 
                 />
               </div>
 
-              <div className="form-control flex-1 min-h-[60px]">
-                <label className="label py-0 pb-1"><span className="label-text font-bold text-primary/70 text-[10px] uppercase tracking-wider">Notes (Optional)</span></label>
+              <div className="form-control flex-1 min-h-[80px]">
+                <label className="label py-0 pb-1"><span className="label-text font-bold text-primary/70 text-[10px] uppercase tracking-wider">Message / Notes</span></label>
                 <textarea 
                   name="message" 
                   value={formData.message}
                   onChange={handleChange}
-                  className="textarea textarea-bordered w-full bg-white focus:border-primary focus:outline-none rounded-xl resize-none p-3 text-sm h-full min-h-[60px]" 
+                  className="textarea textarea-bordered w-full bg-white focus:border-primary focus:outline-none rounded-xl resize-none p-3 text-sm h-full min-h-[80px]" 
                 ></textarea>
               </div>
 
@@ -205,12 +227,12 @@ export default function PlanInquiryModal({ isOpen, onClose, planName }: PlanInqu
               <button 
                 type="submit" 
                 disabled={status === 'LOADING'}
-                className="btn btn-primary w-full rounded-xl h-11 min-h-[2.75rem] shadow-md transition-all font-bold uppercase tracking-widest text-sm mt-1"
+                className="btn btn-primary w-full rounded-xl h-12 min-h-[3rem] shadow-md transition-all font-bold uppercase tracking-widest text-sm mt-1"
               >
                 {status === 'LOADING' ? (
-                  <><Loader2 className="animate-spin" size={16} /> sending...</>
+                  <><Loader2 className="animate-spin" size={16} /> sending inquiry...</>
                 ) : (
-                  <>Submit Application <Send size={16} /></>
+                  <>Submit Inquiry <Send size={16} /></>
                 )}
               </button>
             </form>
@@ -231,4 +253,6 @@ export default function PlanInquiryModal({ isOpen, onClose, planName }: PlanInqu
       `}</style>
     </div>
   );
+
+  return createPortal(modalContent, document.body);
 }
