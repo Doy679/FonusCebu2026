@@ -17,7 +17,9 @@ import { Membership } from '../types';
 const COLLECTION_NAME = 'memberships';
 
 // Helper to remove undefined values
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const cleanData = (data: Record<string, any>) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const cleaned: Record<string, any> = {};
   Object.keys(data).forEach(key => {
     if (data[key] !== undefined) {

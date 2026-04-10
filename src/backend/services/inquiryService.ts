@@ -84,6 +84,7 @@ export const inquiryService = {
       const cleanUpdates = { ...updates };
       delete cleanUpdates.id;
       
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       await updateDoc(inquiryRef, cleanUpdates as Record<string, any>);
       
       // Fetch the updated document to return it
