@@ -3,11 +3,13 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Globe } from 'lucide-react';
 import { siteData } from '@/data/siteData';
+import { useLanguage } from '@/lib/LanguageContext';
 
 export default function Navbar() {
   const [isOpen, setIsState] = useState(false);
+  const { language, setLanguage, t } = useLanguage();
 
   const toggleMenu = () => setIsState(!isOpen);
 
@@ -57,12 +59,31 @@ export default function Navbar() {
           ${isOpen ? 'opacity-100 visible' : 'opacity-0 invisible md:opacity-100 md:visible'}
         `}>
           <ul className="flex flex-col md:flex-row items-center gap-8 text-xl md:text-sm font-medium text-white/90 uppercase tracking-widest">
-            <li><Link href="#home" onClick={() => setIsState(false)} className="hover:text-accent relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bottom-[-4px] after:left-0 after:bg-accent after:transition-all hover:after:w-full">Home</Link></li>
-            <li><Link href="#about" onClick={() => setIsState(false)} className="hover:text-accent relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bottom-[-4px] after:left-0 after:bg-accent after:transition-all hover:after:w-full">About</Link></li>
-            <li><Link href="#values" onClick={() => setIsState(false)} className="hover:text-accent relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bottom-[-4px] after:left-0 after:bg-accent after:transition-all hover:after:w-full">Values</Link></li>
-            <li><Link href="#packages" onClick={() => setIsState(false)} className="hover:text-accent relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bottom-[-4px] after:left-0 after:bg-accent after:transition-all hover:after:w-full">Packages</Link></li>
-            <li><Link href="#location" onClick={() => setIsState(false)} className="hover:text-accent relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bottom-[-4px] after:left-0 after:bg-accent after:transition-all hover:after:w-full">Location</Link></li>
-            <li><Link href="#contact" onClick={() => setIsState(false)} className="btn bg-white text-primary border-none hover:bg-accent hover:text-white px-8 rounded-full normal-case">Contact Us</Link></li>
+            <li><Link href="#home" onClick={() => setIsState(false)} className="hover:text-accent relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bottom-[-4px] after:left-0 after:bg-accent after:transition-all hover:after:w-full">{t('nav_home')}</Link></li>
+            <li><Link href="#about" onClick={() => setIsState(false)} className="hover:text-accent relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bottom-[-4px] after:left-0 after:bg-accent after:transition-all hover:after:w-full">{t('nav_about')}</Link></li>
+            <li><Link href="#values" onClick={() => setIsState(false)} className="hover:text-accent relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bottom-[-4px] after:left-0 after:bg-accent after:transition-all hover:after:w-full">{t('nav_values')}</Link></li>
+            <li><Link href="#packages" onClick={() => setIsState(false)} className="hover:text-accent relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bottom-[-4px] after:left-0 after:bg-accent after:transition-all hover:after:w-full">{t('nav_packages')}</Link></li>
+            <li><Link href="#location" onClick={() => setIsState(false)} className="hover:text-accent relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bottom-[-4px] after:left-0 after:bg-accent after:transition-all hover:after:w-full">{t('nav_location')}</Link></li>
+            
+            {/* Language Switcher */}
+            <li className="flex items-center gap-2 px-3 py-1 bg-white/10 rounded-full border border-white/20">
+              <Globe size={14} className="text-white/70" />
+              <button 
+                onClick={() => setLanguage('en')} 
+                className={`text-[10px] font-bold transition-colors ${language === 'en' ? 'text-accent' : 'text-white/60 hover:text-white'}`}
+              >
+                EN
+              </button>
+              <span className="text-white/20 text-[10px]">|</span>
+              <button 
+                onClick={() => setLanguage('ceb')} 
+                className={`text-[10px] font-bold transition-colors ${language === 'ceb' ? 'text-accent' : 'text-white/60 hover:text-white'}`}
+              >
+                CEB
+              </button>
+            </li>
+
+            <li><Link href="#contact" onClick={() => setIsState(false)} className="btn bg-white text-primary border-none hover:bg-accent hover:text-white px-8 rounded-full normal-case">{t('nav_contact')}</Link></li>
           </ul>
         </nav>
       </div>
