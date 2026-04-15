@@ -48,12 +48,10 @@ export interface SiteData {
   }
 
   export interface HeroData {
-  ...
-  export interface BoardMember {
-  name: string;
-  role?: string;
-  affiliation: string;
-  image?: string;
+  badge: string;
+  title: string;
+  subtitle: string;
+  buttonText: string;
   }
 
 export interface AboutData {
@@ -106,5 +104,7 @@ export interface ContactData {
 
 export interface BoardMember {
   name: string;
+  role?: string;
   affiliation: string;
+  image?: string;
 }
