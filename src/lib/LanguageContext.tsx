@@ -14,9 +14,11 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   // Use lazy initialization for state to avoid hydration mismatch and unnecessary effects
   const [language, setLanguageState] = useState<Language>('en');
+  const [mounted, setMounted] = useState(false);
 
   // Load from localStorage on mount
   useEffect(() => {
+    setMounted(true);
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('language') as Language;
       if (saved && (saved === 'en' || saved === 'ceb')) {
@@ -36,6 +38,10 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const t = (key: keyof typeof translations.en): string => {
     return translations[language][key] || translations.en[key] || key;
   };
+
+  if (!mounted) {
+    return null; // Or a loading spinner
+  }
 
   return (
     <LanguageContext.Provider value={{ language, setLanguage, t }}>

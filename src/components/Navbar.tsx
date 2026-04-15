@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Menu, X, Globe } from 'lucide-react';
 import { siteData } from '@/data/siteData';
 import { useLanguage } from '@/lib/LanguageContext';
@@ -10,6 +10,11 @@ import { useLanguage } from '@/lib/LanguageContext';
 export default function Navbar() {
   const [isOpen, setIsState] = useState(false);
   const { language, setLanguage, t } = useLanguage();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const toggleMenu = () => setIsState(!isOpen);
 
@@ -66,22 +71,24 @@ export default function Navbar() {
             <li><Link href="#location" onClick={() => setIsState(false)} className="hover:text-accent relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bottom-[-4px] after:left-0 after:bg-accent after:transition-all hover:after:w-full">{t('nav_location')}</Link></li>
             
             {/* Language Switcher */}
-            <li className="flex items-center gap-2 px-3 py-1 bg-white/10 rounded-full border border-white/20">
-              <Globe size={14} className="text-white/70" />
-              <button 
-                onClick={() => setLanguage('en')} 
-                className={`text-[10px] font-bold transition-colors ${language === 'en' ? 'text-accent' : 'text-white/60 hover:text-white'}`}
-              >
-                EN
-              </button>
-              <span className="text-white/20 text-[10px]">|</span>
-              <button 
-                onClick={() => setLanguage('ceb')} 
-                className={`text-[10px] font-bold transition-colors ${language === 'ceb' ? 'text-accent' : 'text-white/60 hover:text-white'}`}
-              >
-                CEB
-              </button>
-            </li>
+            {mounted && (
+              <li className="flex items-center gap-2 px-3 py-1 bg-white/10 rounded-full border border-white/20">
+                <Globe size={14} className="text-white/70" />
+                <button 
+                  onClick={() => setLanguage('en')} 
+                  className={`text-[10px] font-bold transition-colors ${language === 'en' ? 'text-accent' : 'text-white/60 hover:text-white'}`}
+                >
+                  EN
+                </button>
+                <span className="text-white/20 text-[10px]">|</span>
+                <button 
+                  onClick={() => setLanguage('ceb')} 
+                  className={`text-[10px] font-bold transition-colors ${language === 'ceb' ? 'text-accent' : 'text-white/60 hover:text-white'}`}
+                >
+                  CEB
+                </button>
+              </li>
+            )}
 
             <li><Link href="#contact" onClick={() => setIsState(false)} className="btn bg-white text-primary border-none hover:bg-accent hover:text-white px-8 rounded-full normal-case">{t('nav_contact')}</Link></li>
           </ul>

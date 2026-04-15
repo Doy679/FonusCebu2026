@@ -6,8 +6,10 @@ import Image from 'next/image';
 export default function TransitionScreen() {
   const [show, setShow] = useState(true);
   const [opacity, setOpacity] = useState(1);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     // Start fade out after 0.7s
     const timer1 = setTimeout(() => {
       setOpacity(0);
@@ -24,7 +26,7 @@ export default function TransitionScreen() {
     };
   }, []);
 
-  if (!show) return null;
+  if (!mounted || !show) return null;
 
   return (
     <div 
