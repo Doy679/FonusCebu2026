@@ -3,9 +3,9 @@
 import { useState, useRef } from "react";
 import { Membership, MembershipRecord } from "@/backend/types";
 import { Loader2, Save, UploadCloud, Trash2, Printer } from "lucide-react";
-import { db, app } from "@/lib/firebase";
+import { auth, db } from "@/lib/firebase";
 import { collection, addDoc, doc, updateDoc, Timestamp } from "firebase/firestore";
-import { getAuth, signInAnonymously } from "firebase/auth";
+import { signInAnonymously } from "firebase/auth";
 import * as XLSX from 'xlsx';
 import MembershipPrint from "./MembershipPrint";
 
@@ -244,8 +244,7 @@ export default function MembershipCardForm({
 
     setLocalIsSubmitting(true);
     try {
-      const authInstance = getAuth(app);
-      if (!authInstance.currentUser) await signInAnonymously(authInstance);
+      if (!auth.currentUser) await signInAnonymously(auth);
 
       const batchPromises = membersList.map(async (member) => {
           const dataToSave: Record<string, unknown> = {
