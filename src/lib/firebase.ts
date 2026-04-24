@@ -2,13 +2,19 @@ import { initializeApp, getApps, getApp, FirebaseApp } from "firebase/app";
 import { getFirestore, Firestore } from "firebase/firestore";
 import { getAuth, Auth } from "firebase/auth";
 
+const getSafeEnv = (name: string) => {
+  const val = process.env[name] || '';
+  // Remove quotes and trailing/leading whitespace
+  return val.replace(/['"]/g, '').trim();
+};
+
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  apiKey: getSafeEnv('NEXT_PUBLIC_FIREBASE_API_KEY'),
+  authDomain: getSafeEnv('NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN'),
+  projectId: getSafeEnv('NEXT_PUBLIC_FIREBASE_PROJECT_ID'),
+  storageBucket: getSafeEnv('NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET'),
+  messagingSenderId: getSafeEnv('NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID'),
+  appId: getSafeEnv('NEXT_PUBLIC_FIREBASE_APP_ID'),
 };
 
 console.log("Firebase Config Check:", {
@@ -30,39 +36,47 @@ const getAppInstance = (): FirebaseApp => {
   if (hasConfig) {
     appInstance = !getApps().length ? initializeApp(firebaseConfig) : getApp();
   } else {
-    // Return a dummy object if no config (e.g. during build)
-    appInstance = {
-      name: '[DEFAULT]',
-      options: {},
-      automaticDataCollectionEnabled: false,
-    } as FirebaseApp;
+    console.warn("Firebase configuration is missing! Check your .env.local file.");
+    // Return a proxy that throws a descriptive error when accessed
+    appInstance = new Proxy({} as FirebaseApp, {
+      get: (target, prop) => {
+        if (prop === 'name') return '[DEFAULT]';
+        if (prop === 'options') return {};
+        throw new Error(`Firebase App accessed but not initialized. Ensure NEXT_PUBLIC_FIREBASE_API_KEY is set.`);
+      }
+    });
   }
   return appInstance;
 };
 
-// We use getters for db and auth but export them as constants via proxy if needed
-// or just export them as the result of a safe call.
-
 const getDbInstance = (): Firestore => {
   if (dbInstance) return dbInstance;
   const app = getAppInstance();
-  if (hasConfig) {
+  try {
     dbInstance = getFirestore(app);
-  } else {
-    dbInstance = {} as Firestore;
+    return dbInstance;
+  } catch (error) {
+    console.error("Failed to initialize Firestore:", error);
+    return {} as Firestore;
   }
-  return dbInstance;
 };
 
 const getAuthInstance = (): Auth => {
   if (authInstance) return authInstance;
   const app = getAppInstance();
-  if (hasConfig) {
+  try {
+    // If hasConfig is false, the proxy app will throw a clear error here
     authInstance = getAuth(app);
-  } else {
-    authInstance = {} as Auth;
+    return authInstance;
+  } catch (error) {
+    console.error("Failed to initialize Firebase Auth. This usually means environment variables (NEXT_PUBLIC_FIREBASE_API_KEY, etc.) are missing on your live server.");
+    // We return a proxy for Auth as well to catch calls to signIn...
+    return new Proxy({} as Auth, {
+      get: () => {
+        throw new Error("Firebase Auth is not initialized. Check your production environment variables.");
+      }
+    });
   }
-  return authInstance;
 };
 
 // Export as constants for backward compatibility
