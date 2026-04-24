@@ -4,9 +4,27 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Mail, Lock, ArrowRight, Loader2 } from 'lucide-react';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { app } from '@/lib/firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
 import TransitionScreen from '@/components/TransitionScreen';
+
+const getLoginErrorMessage = (err: unknown) => {
+  const message = err instanceof Error ? err.message : "An unknown error occurred";
+  const code =
+    typeof err === "object" && err !== null && "code" in err
+      ? String((err as { code?: unknown }).code)
+      : "";
+
+  if (
+    code === "auth/api-key-not-valid" ||
+    message.includes("auth/api-key-not-valid") ||
+    message.includes("Firebase is not configured correctly")
+  ) {
+    return "Firebase is not configured correctly. Check NEXT_PUBLIC_FIREBASE_API_KEY in .env.local or your deployment environment, confirm this domain is allowed by the API key restrictions, then restart/redeploy the app.";
+  }
+
+  return message;
+};
 
 export default function LoginPage() {
   const router = useRouter();
@@ -21,7 +39,6 @@ export default function LoginPage() {
     setError('');
 
     try {
-      const auth = getAuth(app);
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
@@ -32,8 +49,7 @@ export default function LoginPage() {
       router.push('/admin/dashboard');
     } catch (err) {
       console.error("Login Error:", err);
-      const errorMessage = err instanceof Error ? err.message : "An unknown error occurred";
-      setError(errorMessage);
+      setError(getLoginErrorMessage(err));
     } finally {
       setIsPending(false);
     }
