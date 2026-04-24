@@ -12,7 +12,9 @@ const firebaseConfig = {
 };
 
 console.log("Firebase Config Check:", {
-  apiKey: !!firebaseConfig.apiKey,
+  apiKeyExists: !!firebaseConfig.apiKey,
+  apiKeyPrefix: firebaseConfig.apiKey ? firebaseConfig.apiKey.substring(0, 5) : 'none',
+  apiKeyLength: firebaseConfig.apiKey ? firebaseConfig.apiKey.length : 0,
   projectId: !!firebaseConfig.projectId,
   hasConfig: !!firebaseConfig.apiKey
 });
